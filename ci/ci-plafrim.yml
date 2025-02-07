@@ -176,8 +176,8 @@ build-linux-gcc-coverage:
   extends: .build-plafrim
   variables:
     MODULE_COMPILER: compiler/intel
-    CC: icc
-    CXX: icpc
+    CC: icx
+    CXX: icpx
 
 
 build-linux-icpc:
