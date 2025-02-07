@@ -1,0 +1,25 @@
+
+
+.deploy-github-com:
+  tags:
+    - linux
+  dependencies:
+    - coverage-linux
+  rules:
+    - if: $CI_COMMIT_BRANCH == "develop" 
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: never
+  stage: deploy
+  allow_failure: true
+
+
+pages:
+  extends: .deploy-github-com
+  script:
+    - mv code_coverage_report/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days

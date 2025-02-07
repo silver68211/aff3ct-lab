@@ -1,0 +1,98 @@
+### Windows
+
+.tags-windows:
+  tags:
+    - x86_64
+    - windows
+    - nlohmann
+
+
+################################# Build win #####################################################################################################################################################################################
+
+############### MSYS 2 ###########################
+
+.config-msys2:
+  extends: .tags-windows
+  variables:
+    MSYSTEM: "MINGW64"
+    CHERE_INVOKING: "yes"   
+  before_script:
+    - hostname
+    - whoami
+    - $env:CMAKE_PREFIX_PATH +=";$Env:SystemDrive\msys64\mingw64"
+    - $Env:CMAKE_INSTALL_PREFIX +=";$Env:SystemDrive\msys64\mingw64"
+    - $Env:path += ";$Env:SystemDrive\msys64\usr\bin;$Env:SystemDrive\msys64\mingw64\bin"
+
+.build-win-msys2:
+  extends: .config-msys2
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    CMAKE_INCLUDE_PATH: C:/msys64/mingw64/include/
+  needs:
+  - job: analysis-cppcheck
+    artifacts: false
+  - job: analysis-headers
+    artifacts: false
+
+build-windows-gcc_JSON :
+  extends: .build-win-msys2
+  parallel:
+    matrix:
+      - COMPILER: gcc-x86-sse4.2
+        CFLAGS: -msse4.2
+        JSON: ['OFF','ON']
+      - COMPILER: gcc-x64-avx2
+        CFLAGS: -mavx2
+        JSON: ['ON']      
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_gcc:v8.1.0
+  variables:
+    CFLAGS: -Wall -funroll-loops -m64 $CFLAGS
+    LFLAGS: -static -static-libgcc -static-libstdc++
+    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DSPU_STACKTRACE=OFF
+    NAME: build_windows_${COMPILER}
+  artifacts:
+    name: build-windows-${COMPILER}
+    paths:
+      - build_windows_${COMPILER}
+  script:
+    - ./ci/windows/build-windows-gcc.bat
+
+############### MSVC  ###########################
+
+.build-win-MSVC:
+  extends: .tags-windows 
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    #CMAKE_TOOLCHAIN_FILE: "C:/Users/ci/vcpkg/scripts/buildsystems/vcpkg.cmake"   #SPU_CMAKE_PREFIX_PATH:C:/Users/ci/vcpkg/installed/x64-windows/debugC:/Users/ci/vcpkg/installed/x64-windows
+    CMAKE_PREFIX_PATH : "C:/Users/ci/vcpkg/installed/x64-windows"
+  needs:
+  # - job: analysis-cppcheck
+  #   artifacts: false
+   - job: analysis-headers
+     artifacts: false
+  before_script:
+    - hostname
+    - whoami
+
+build-windows-msvc-avx_JSON:
+  extends: .build-win-MSVC
+  parallel:
+    matrix:
+      - JSON: ['OFF','ON']
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_msvc:v15
+  variables:
+    CFLAGS: -D_CRT_SECURE_NO_DEPRECATE /MT /EHsc /arch:AVX
+    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DSPU_STACKTRACE=OFF -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} #-DCMAKE_VERBOSE_MAKEFILE=ON 
+    NAME: build_windows_msvc_avx
+  artifacts:
+    name: build-windows-msvc-avx
+    paths:
+      - build_windows_msvc_avx
+  script:
+    - ./ci/windows/build-windows-msvc.bat

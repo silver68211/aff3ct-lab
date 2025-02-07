@@ -1,0 +1,244 @@
+################################# Build Linux ####################################################################################################################################################################################
+
+
+##################################################################################### gcc """"""""""""""""""""
+
+.build-linux-gcc:
+  extends: .build-linux
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+  variables:
+    CC: gcc
+    CXX: g++
+    CFLAGS: -Wall -funroll-loops $CFLAGS_SPE
+    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=${AFF3CT_PREC} -DAFF3CT_EXT_STRINGS=OFF ${CMAKE_OPT_SPE}
+    NAME: build_linux_${COMPILER}_json_${JSON}
+  artifacts:
+    name: build-linux-${COMPILER}-json-${JSON}
+    paths:
+      - ${NAME}
+
+build-linux-gcc:
+  extends: .build-linux-gcc
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  parallel:
+    matrix: 
+      - COMPILER: gcc-x64-sse4.2
+        CFLAGS_SPE: -m64 -msse4.2
+        JSON: ['ON']
+        AFF3CT_PREC: MULTI
+        LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+
+build-linux-gcc-opt:
+  extends: .build-linux-gcc
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  parallel:
+    matrix:
+      - COMPILER: gcc-nointr
+        CFLAGS_SPE: -DMIPP_NO_INTRINSICS
+        JSON: ['ON']
+        AFF3CT_PREC: MULTI
+        LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+    
+      - COMPILER: gcc-x64-sse4.2
+        CFLAGS_SPE: -m64 -msse4.2
+        JSON: ['OFF']
+        AFF3CT_PREC: MULTI
+        LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+    
+      - COMPILER: gcc-x64-avx2
+        CFLAGS_SPE: -m64 -mavx2 -mfma
+        JSON: ['ON']
+        AFF3CT_PREC: MULTI
+        LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+    
+      - COMPILER: gcc-8-bit
+        CFLAGS_SPE: -march=native
+        JSON: ['OFF', 'ON']
+        AFF3CT_PREC: '8'
+        CMAKE_OPT_SPE: -DAFF3CT_LINK_GSL=ON
+
+
+build-linux-gcc-mpi:
+  extends: .build-linux-gcc
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  parallel:
+    matrix:
+      - JSON: ['OFF','ON']
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_openmpi:v4.0.3
+  variables:
+    CFLAGS_SPE: -march=native
+    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=OFF -DAFF3CT_COMPILE_SHARED_LIB=OFF -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON -DAFF3CT_MPI=ON
+    COMPILER: gcc-mpi
+
+build-linux-gcc-coverage:
+  extends: .build-linux-gcc
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+  variables:
+    CFLAGS_SPE: -msse4.2 --coverage
+    LFLAGS: --coverage
+    CMAKE_OPT: -DAFF3CT_JSON=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_DEBUG=-O0 -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_PREC=MULTI
+  artifacts:
+    name: build
+    paths:
+      - build.tar.gz
+  script:
+    - source ./ci/tools/threads.sh
+    - ./ci/build-linux-macos.sh
+    - rm -rf build/lib/
+    - find build/CMakeFiles/aff3ct-obj.dir/ -name "*.o" -type f -delete
+    - tar -czvf build.tar.gz build
+
+
+##################################################################################### clang """"""""""""""""""""
+
+#no plafrim module equivalent so in main pipline file
+
+##################################################################################### icpc """"""""""""""""""""
+
+.build-linux-icpc:
+  extends: .build-linux
+  variables:
+    CC: icc
+    CXX: icpc
+  image: intel/oneapi-hpckit:2022.2-devel-ubuntu20.04
+  before_script:
+  - hostname
+  - whoami
+  - wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics-archive-keyring.gpg
+  - apt-get update
+  - apt-get install -y nlohmann-json3-dev
+
+
+build-linux-icpc:
+  extends: .build-linux-icpc
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  parallel:
+    matrix:
+      - JSON: ['OFF','ON']
+  variables:
+    GIT_TAG: v0.0.0
+    CFLAGS: -Wall -funroll-loops -march=native -std=c++11
+    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=OFF -DAFF3CT_LINK_MKL=ON
+    NAME: build_linux_icpc
+  artifacts:
+    name: build-linux-icpc
+    paths:
+      - build_linux_icpc
+
+####################################################### Check ################################################################################################################################################################
+
+check-documentation:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_python:v3.8.5
+  stage: check
+  needs:
+    - job: build-linux-gcc
+      artifacts: true
+  tags:
+    - x86_64
+    - sse4.2
+    - linux
+    - docker
+  script:
+    - ./ci/check-documentation.py --aff3ct "build_linux_gcc-x64-sse4.2_json_ON/bin/aff3ct"
+
+    
+################################# Regression ####################################################################################################################################################################################
+
+test-regression:
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_python:v3.8.5
+  stage: test
+  parallel:
+    matrix:
+      - { CODE: BCH,       RESULT: bch }
+      - { CODE: LDPC,      RESULT: ldpc }
+      - { CODE: POLAR,     RESULT: polar }
+      - { CODE: POLAR_MK,  RESULT: polar-mk }
+      - { CODE: RA,        RESULT: ra }
+      - { CODE: REP,       RESULT: rep }
+      - { CODE: RS,        RESULT: rs }
+      - { CODE: RSC,       RESULT: rsc }
+      - { CODE: RSC_DB,    RESULT: rsc-db }
+      - { CODE: TURBO,     RESULT: turbo }
+      - { CODE: TURBO_DB,  RESULT: turbo-db }
+      - { CODE: TURBO_PROD,RESULT: turbo-prod }
+      - { CODE: UNCODED,   RESULT: uncoded }
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    BUILD_PATH: build_linux_gcc-x64-sse4.2_json_ON
+  retry: 1
+  needs:
+    - job: build-linux-gcc
+      artifacts: true
+  tags:
+    - x86_64
+    - sse4.2
+    - linux
+    - docker
+  artifacts:
+     name: test-regression-results-${RESULT}
+     when: always
+     paths:
+      - test-regression-results-${RESULT}/
+  script:
+    - source ./ci/tools/threads.sh
+    - source ./ci/tools/git-version.sh
+    - export VAR_NAME="CI_AFF3CT_TEST_${CODE}_TIME_SEC"
+    - export TIME_SEC="${!VAR_NAME}"
+    - ./ci/test-regression.py --refs-path refs/${CODE} --results-path test-regression-results-${RESULT} --build-path ${BUILD_PATH} --binary-path bin/aff3ct-$GIT_VERSION --max-snr-time $TIME_SEC --sensibility 2.5 --weak-rate 0.9 --verbose 1 --n-threads $THREADS
+
+####################################################### TEST ################################################################################################################################################################
+
+### Coverage
+
+.test-coverage:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "schedule"'
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_coverage
+  stage: coverage
+  needs:
+    - job: build-linux-gcc-coverage
+      artifacts: true
+
+test-coverage-regression:
+  extends: .test-coverage
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+  tags:
+    - x86_64
+    - sse4.2
+    - linux
+    - docker
+    - powerful
+  artifacts:
+     name: code-coverage-files
+     when: always
+     paths:
+      - code_coverage_files/
+  script:
+    - tar -xvvf build.tar.gz
+    - source ./ci/tools/git-version.sh
+    - ./ci/test-coverage-regression.sh
+
+coverage-linux:
+  extends: .test-coverage
+  needs:
+  - job: test-coverage-regression
+    artifacts: true
+  tags:
+    - x86_64
+    - linux
+    - docker
+  coverage: '/.*lines\.*: (\d+.\d+\%)/'
+  artifacts:
+     name: code-coverage-report
+     when: always
+     paths:
+       - code_coverage_report/
+  script:
+    - ./ci/coverage-linux.sh
