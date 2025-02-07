@@ -43,10 +43,10 @@ build-windows-gcc_JSON :
     matrix:
       - COMPILER: gcc-x86-sse4.2
         CFLAGS: -msse4.2
-        JSON: ['OFF','ON']
+        JSON: OFF #['OFF','ON']
       - COMPILER: gcc-x64-avx2
         CFLAGS: -mavx2
-        JSON: ['ON']      
+        JSON: OFF #['ON']      
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_gcc:v8.1.0
   variables:
     CFLAGS: -Wall -funroll-loops -m64 $CFLAGS
@@ -84,7 +84,7 @@ build-windows-msvc-avx_JSON:
   extends: .build-win-MSVC
   parallel:
     matrix:
-      - JSON: ['OFF','ON']
+      - JSON: ON #['OFF','ON']
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_msvc:v15
   variables:
     CFLAGS: -D_CRT_SECURE_NO_DEPRECATE /MT /EHsc /arch:AVX

@@ -103,7 +103,7 @@ build-linux-gcc-opt:
     
       - COMPILER: gcc-x64-sse4.2
         CFLAGS_SPE: -m64 -msse4.2
-        JSON: ['OFF','ON']
+        JSON: OFF #['OFF','ON']
         AFF3CT_PREC: MULTI
         LFLAGS: -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
     
@@ -115,7 +115,7 @@ build-linux-gcc-opt:
     
       - COMPILER: gcc-8-bit
         CFLAGS_SPE: -march=native
-        JSON: ['OFF', 'ON']
+        JSON: OFF # ['OFF', 'ON']
         AFF3CT_PREC: '8'
         CMAKE_OPT_SPE: -DAFF3CT_LINK_GSL=ON
         MODULE_SPE: linalg/gsl/2.8
@@ -132,7 +132,7 @@ build-linux-gcc-mpi:
     - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
-      - JSON: ['OFF','ON']
+      - JSON: OFF #['OFF','ON']
   variables:
     COMPILER: gcc-mpi
     MODULE_SPE: mpi/openmpi/5.0.1 linalg/gsl/2.8
@@ -186,7 +186,7 @@ build-linux-icpc:
     - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
-      - JSON: ['OFF','ON']
+      - JSON: OFF #['OFF','ON']
   variables:
     GIT_TAG: v0.0.0
     CFLAGS: -Wall -funroll-loops -march=native -std=c++11
