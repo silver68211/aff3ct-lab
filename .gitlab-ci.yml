@@ -206,13 +206,13 @@ include:
 
   # Alternative runner for main pipline
   # 1 Plafrim
-  - local: 'ci/ci-plafrim.yml'
-    rules:
-      - if : $CI_AFF3CT_RUNNER_PLAFRIM == "ON"
+  # - local: 'ci/ci-plafrim.yml'
+  #   rules:
+  #     - if : $CI_AFF3CT_RUNNER_PLAFRIM == "ON"
   # 2 Standard Linux runner
   - local: 'ci/ci-no-plafrim.yml'
-    rules:
-      - if : $CI_AFF3CT_RUNNER_PLAFRIM == "OFF"
+    # rules:
+    #   - if : $CI_AFF3CT_RUNNER_PLAFRIM == "OFF"
   
   # Deploy
   - local: 'ci/deploy/deploy_gitlab_com.yml'
