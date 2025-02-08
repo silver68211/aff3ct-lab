@@ -17,7 +17,7 @@ analysis-git-submodules:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - source ./ci/tools/git-branch.sh
-    - ./ci/analysis-git-submodule.sh
+    - ./ci/deploy/analysis-git-submodule.sh
 
 
 ################################# Deploy ####################################################################################################################################################################################
@@ -89,8 +89,11 @@ deploy-builds-linux-windows:
     - source ./ci/tools/git-message.sh
     - source ./ci/tools/git-author.sh
     - source ./ci/tools/git-version.sh
-    # - ./ci/deploy-builds-linux.sh build_linux_gcc_x64_sse4.2 build_linux_gcc_x64_avx2 build_windows_gcc_x86_sse4.2 build_windows_gcc_x64_avx2 build_macos_clang_x64_sse4.2
-    - ./ci/deploy/deploy-builds-linux.sh build_linux_gcc_x64_sse4.2 build_linux_gcc_x64_avx2 build_windows_gcc_x86_sse4.2 build_windows_gcc_x64_avx2
+
+    - ./ci/deploy/deploy-builds-linux.sh build_linux_gcc_x64_sse4.2_json_ON \
+                                         build_linux_gcc_x64_avx2_json_ON \
+                                         build_windows_gcc_x86_sse4.2_json_ON \
+                                         build_windows_gcc_x64_avx2_json_ON
 
 deploy-upload-ppa:
   extends: .tag-deploy

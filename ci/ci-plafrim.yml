@@ -74,8 +74,9 @@
   artifacts:
     name: build-linux-${COMPILER}-json-${JSON}
     paths:
-      - ${NAME}
       - ${NAME}.out
+
+######### build-linux-gcc
 
 build-linux-gcc:
   extends: .build-plafrim-gcc
@@ -88,11 +89,17 @@ build-linux-gcc:
         JSON: ['ON']
         AFF3CT_PREC: MULTI
         LFLAGS: -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+  artifacts:
+    name: build-linux-${COMPILER}-json-${JSON}
+    paths:
+      - ${NAME}
+      - ${NAME}.out
 
-build-linux-gcc-opt:
+
+######### build-linux-gcc-opt
+
+.build-linux-gcc-opt:
   extends: .build-plafrim-gcc
-  rules:
-    - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
       - COMPILER: gcc-nointr
@@ -126,10 +133,26 @@ build-linux-gcc-opt:
         AFF3CT_PREC: MULTI
         LFLAGS: -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
 
-build-linux-gcc-mpi:
+
+build-linux-gcc-opt-artifact:
+  extends: .build-linux-gcc-opt
+  artifacts:
+    name: build-linux-${COMPILER}-json-${JSON}
+    paths:
+      - ${NAME}
+      - ${NAME}.out
+  rules: 
+    - if : $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
+
+build-linux-gcc-opt:
+  extends: .build-linux-gcc-opt
+  rules: 
+    - if : $CI_SERVER_HOST != "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
+
+######### build-linux-gcc-mpi
+
+.build-linux-gcc-mpi:
   extends: .build-plafrim-gcc
-  rules:
-    - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
       - JSON: OFF #['OFF','ON']
@@ -140,6 +163,23 @@ build-linux-gcc-mpi:
     CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=OFF -DAFF3CT_COMPILE_SHARED_LIB=OFF -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON -DAFF3CT_MPI=ON
     NAME: build_linux_gcc_mpi_${JSON}
 
+build-linux-gcc-mpi-artifact:
+  extends: .build-linux-gcc-mpi
+  artifacts:
+    name: build-linux-${COMPILER}-json-${JSON}
+    paths:
+      - ${NAME}
+      - ${NAME}.out
+  rules: 
+    - if : $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
+
+build-linux-gcc-mpi:
+  extends: .build-linux-gcc-mpi
+  rules: 
+    - if : $CI_SERVER_HOST != "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
+
+
+######### build-linux-gcc-coverage
 
 build-linux-gcc-coverage:
   extends: .build-plafrim-gcc
@@ -180,10 +220,8 @@ build-linux-gcc-coverage:
     CXX: icpx
 
 
-build-linux-icpc:
+.build-linux-icpc:
   extends: .build-plafrim-icpc
-  rules:
-    - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
       - JSON: OFF #['OFF','ON']
@@ -193,11 +231,22 @@ build-linux-icpc:
     CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=OFF -DAFF3CT_LINK_MKL=ON
     NAME: build_linux_icpc_${JSON}
     MODULE_SPE: linalg/mkl/2022.0.2
+
+
+build-linux-icpc-artifact:
+  extends: .build-linux-gcc-icpc
   artifacts:
     name: build-linux-icpc-json-${JSON}
     paths:
       - ${NAME}
       - ${NAME}.out
+  rules: 
+    - if : $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
+
+build-linux-icpc:
+  extends: .build-linux-gcc-icpc
+  rules: 
+    - if : $CI_SERVER_HOST != "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
 
 
 ####################################################### Check ################################################################################################################################################################

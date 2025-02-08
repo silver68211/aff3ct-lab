@@ -1,6 +1,8 @@
 
 variables:
   GIT_SUBMODULE_STRATEGY: none
+  DEPLOY: $CI_SERVER_HOST" == "gitlab.com" || $CI_SERVER_HOST == "github.com"
+
 
 ###### CI environment
 
@@ -177,10 +179,8 @@ analysis-documentation:
     CXX: clang++
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
 
-build-linux-clang:
+.build-linux-clang-test:
   extends: .build-linux-clang
-  rules:
-    - if: '$CI_PIPELINE_SOURCE != "schedule"'
   parallel:
     matrix:
       - JSON: ['OFF','ON']
@@ -192,6 +192,21 @@ build-linux-clang:
     name: build-linux-clang
     paths:
       - build_linux_clang
+
+
+build-linux-clang-artifact:
+  extends: .build-linux-clang-test
+  artifacts:
+    name: build-linux-icpc
+    paths:
+      - build_linux_icpc
+  rules: 
+    - if : $CI_SERVER_HOST == "gitlab.com" 
+
+build-linux-clang:
+  extends: .build-linux-clang-test
+  rules: 
+    - if : $CI_SERVER_HOST != "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
 
 ####################################################### Options ################################################################################################################################################################
 
