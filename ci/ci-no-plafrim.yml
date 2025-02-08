@@ -13,7 +13,7 @@
     CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=${AFF3CT_PREC} -DAFF3CT_EXT_STRINGS=OFF ${CMAKE_OPT_SPE}
     NAME: build_linux_${COMPILER}_json_${JSON}
 
-######### build-linux-gcc (uesd for regression)
+######### build-linux-gcc (used for regressions)
 
 build-linux-gcc:
   extends: .build-linux-gcc
@@ -26,10 +26,16 @@ build-linux-gcc:
         JSON: ['OFF']
         AFF3CT_PREC: MULTI
         LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
+  variables:
+    BUILD_DIR_EXPORT: true
   artifacts:
+    reports:
+      dotenv: build.env
     name: build-linux-${COMPILER}-json-${JSON}
     paths:
-      - ${NAME}
+      - ${BUILD_DIR}
+
+
 
 ######### build-linux-gcc-opt
       
@@ -181,7 +187,7 @@ check-documentation:
     - linux
     - docker
   script:
-    - ./ci/check-documentation.py --aff3ct "build_linux_gcc-x64-sse4.2_json_ON/bin/aff3ct"
+    - ./ci/check-documentation.py --aff3ct "$BUILD_DIR/bin/aff3ct"
 
     
 ################################# Regression ####################################################################################################################################################################################
@@ -206,7 +212,6 @@ test-regression:
       - { CODE: UNCODED,   RESULT: uncoded }
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
-    BUILD_PATH: build_linux_gcc-x64-sse4.2_json_ON
   retry: 1
   needs:
     - job: build-linux-gcc
@@ -226,7 +231,7 @@ test-regression:
     - source ./ci/tools/git-version.sh
     - export VAR_NAME="CI_AFF3CT_TEST_${CODE}_TIME_SEC"
     - export TIME_SEC="${!VAR_NAME}"
-    - ./ci/test-regression.py --refs-path refs/${CODE} --results-path test-regression-results-${RESULT} --build-path ${BUILD_PATH} --binary-path bin/aff3ct-$GIT_VERSION --max-snr-time $TIME_SEC --sensibility 2.5 --weak-rate 0.9 --verbose 1 --n-threads $THREADS
+    - ./ci/test-regression.py --refs-path refs/${CODE} --results-path test-regression-results-${RESULT} --build-path ${BUILD_DIR} --binary-path bin/aff3ct-$GIT_VERSION --max-snr-time $TIME_SEC --sensibility 2.5 --weak-rate 0.9 --verbose 1 --n-threads $THREADS
 
 ####################################################### TEST ################################################################################################################################################################
 

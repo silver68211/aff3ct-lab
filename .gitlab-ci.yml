@@ -160,6 +160,7 @@ analysis-documentation:
   stage: build
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
+    BUILD_DIR_EXPORT: false
   needs:
   - job: analysis-cppcheck
     artifacts: false
@@ -168,6 +169,7 @@ analysis-documentation:
   script:
     - source ./ci/tools/threads.sh
     - ./ci/build-linux-macos.sh
+    - if [ "$BUILD_DIR_EXPORT" = "true" ]; then echo "BUILD_DIR=${NAME}" >> build.env; fi
 
 ##################################################################################### clang """"""""""""""""""""
 #no plafrim module so in main pipline file
@@ -177,34 +179,26 @@ analysis-documentation:
   variables:
     CC: clang
     CXX: clang++
-  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
-
-.build-linux-clang-test:
-  extends: .build-linux-clang
-  parallel:
-    matrix:
-      - JSON: ['OFF','ON']
-  variables:
     CFLAGS: -Wall -Wno-overloaded-virtual -funroll-loops
     CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON
-    NAME: 'build_linux_clang'
-  artifacts:
-    name: build-linux-clang
-    paths:
-      - build_linux_clang
+    NAME: build_linux_clang
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
+  parallel:
+    matrix:
+      - JSON: ['OFF']
 
 
 build-linux-clang-artifact:
-  extends: .build-linux-clang-test
+  extends: .build-linux-clang
   artifacts:
-    name: build-linux-icpc
+    name: build-linux-clang
     paths:
-      - build_linux_icpc
+      - ${NAME}
   rules: 
     - if : $CI_SERVER_HOST == "gitlab.com" 
 
 build-linux-clang:
-  extends: .build-linux-clang-test
+  extends: .build-linux-clang
   rules: 
     - if : $CI_SERVER_HOST != "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule"
 
