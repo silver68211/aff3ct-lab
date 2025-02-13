@@ -146,7 +146,7 @@ analysis-git-submodules:
     GIT_SUBMODULE_STRATEGY: recursive
   script:
     - source ./ci/tools/git-branch.sh
-    - ./ci/deploy/analysis-git-submodule.sh
+    - ./ci/analysis-git-submodule.sh
 
 analysis-documentation:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_doc
