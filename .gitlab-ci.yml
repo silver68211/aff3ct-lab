@@ -180,12 +180,10 @@ analysis-documentation:
     CC: clang
     CXX: clang++
     CFLAGS: -Wall -Wno-overloaded-virtual -funroll-loops
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON
     NAME: build_linux_clang
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
-  parallel:
-    matrix:
-      - JSON: ['OFF']
+
 
 
 build-linux-clang-artifact:

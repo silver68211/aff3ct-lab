@@ -10,7 +10,7 @@
     CC: gcc
     CXX: g++
     CFLAGS: -Wall -funroll-loops $CFLAGS_SPE
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=${AFF3CT_PREC} -DAFF3CT_EXT_STRINGS=OFF ${CMAKE_OPT_SPE}
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=${AFF3CT_PREC} -DAFF3CT_EXT_STRINGS=OFF ${CMAKE_OPT_SPE}
     NAME: build_linux_${COMPILER}_json_${JSON}
 
 ######### build-linux-gcc (used for regressions)
@@ -21,7 +21,6 @@ build-linux-gcc:
     matrix: 
       - COMPILER: gcc-x64-sse4.2
         CFLAGS_SPE: -m64 -msse4.2
-        JSON: ['OFF']
         AFF3CT_PREC: MULTI
         LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
   variables:
@@ -43,19 +42,16 @@ build-linux-gcc:
     matrix:
       - COMPILER: gcc-nointr
         CFLAGS_SPE: -DMIPP_NO_INTRINSICS
-        JSON: ['OFF']
         AFF3CT_PREC: MULTI
         LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
     
       - COMPILER: gcc-x64-avx2
         CFLAGS_SPE: -m64 -mavx2 -mfma
-        JSON: ['OFF']
         AFF3CT_PREC: MULTI
         LFLAGS: -static -static-libgcc -static-libstdc++ -Wl,--whole-archive -lrt -lpthread -Wl,--no-whole-archive
     
       - COMPILER: gcc-8-bit
         CFLAGS_SPE: -march=native
-        JSON: ['OFF']
         AFF3CT_PREC: '8'
         CMAKE_OPT_SPE: -DAFF3CT_LINK_GSL=ON
 
@@ -79,13 +75,10 @@ build-linux-gcc-opt:
 
 .build-linux-gcc-mpi:
   extends: .build-linux-gcc
-  parallel:
-    matrix:
-      - JSON: ['OFF']
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_openmpi:v4.0.3
   variables:
     CFLAGS_SPE: -march=native
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=OFF -DAFF3CT_COMPILE_SHARED_LIB=OFF -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON -DAFF3CT_MPI=ON
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=OFF -DAFF3CT_COMPILE_SHARED_LIB=OFF -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON -DAFF3CT_MPI=ON
     COMPILER: gcc-mpi
 
 
@@ -154,7 +147,7 @@ build-linux-gcc-coverage:
   variables:
     GIT_TAG: v0.0.0
     CFLAGS: -Wall -funroll-loops -march=native -std=c++11
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=OFF -DAFF3CT_LINK_MKL=ON
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=OFF -DAFF3CT_LINK_MKL=ON
     NAME: build_linux_icpc
 
 
