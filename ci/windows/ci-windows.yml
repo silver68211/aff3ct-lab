@@ -1,16 +1,12 @@
-### Windows
-
-# $CI_PIPELINE_SOURCE != "schedule"
+########################
+## build windows jobs ##
+########################
 
 .tags-windows:
   tags:
     - x86_64
     - windows
     - nlohmann
-
-################################# Build win #####################################################################################################################################################################################
-
-############### MSYS 2 ###########################
 
 .config-msys2:
   extends: .tags-windows
@@ -24,6 +20,9 @@
     - $Env:CMAKE_INSTALL_PREFIX +=";$Env:SystemDrive\msys64\mingw64"
     - $Env:path += ";$Env:SystemDrive\msys64\usr\bin;$Env:SystemDrive\msys64\mingw64\bin"
 
+# GCC (MSYS2)
+# -----------
+
 .build-win-msys2:
   extends: .config-msys2
   stage: build
@@ -36,28 +35,25 @@
   - job: analysis-headers
     artifacts: false
 
-.build-windows-gcc_JSON :
+.build-windows-gcc :
   extends: .build-win-msys2
   parallel:
     matrix:
       - COMPILER: gcc-x86-sse4.2
         CFLAGS: -msse4.2
-        JSON: ['OFF']
       - COMPILER: gcc-x64-avx2
         CFLAGS: -mavx2
-        JSON: ['OFF']    
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_gcc:v8.1.0
   variables:
     CFLAGS: -Wall -funroll-loops -m64 $CFLAGS
     LFLAGS: -static -static-libgcc -static-libstdc++
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DSPU_STACKTRACE=OFF
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DSPU_STACKTRACE=OFF
     NAME: build_windows_${COMPILER}
   script:
     - ./ci/windows/build-windows-gcc.bat
 
-
-build-windows-gcc_JSON-artifact:
-  extends: .build-windows-gcc_JSON
+build-windows-gcc-artifacts:
+  extends: .build-windows-gcc
   artifacts:
     name: build-windows-${COMPILER}
     paths:
@@ -66,16 +62,16 @@ build-windows-gcc_JSON-artifact:
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "master" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "develop"
 
-build-windows-gcc_JSON:
-  extends: .build-windows-gcc_JSON
+build-windows-gcc:
+  extends: .build-windows-gcc
   rules: 
     - if: $CI_SERVER_HOST != "gitlab.com" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop"
 
+# MSVC
+# ----
 
-############### MSVC  ###########################
-
-.build-win-MSVC:
+.build-windows-msvc:
   extends: .tags-windows 
   stage: build
   rules:
@@ -92,22 +88,19 @@ build-windows-gcc_JSON:
     - hostname
     - whoami
 
-.build-windows-msvc-avx_JSON:
-  extends: .build-win-MSVC
-  parallel:
-    matrix:
-      - JSON: ['OFF']
+.build-windows-msvc-avx:
+  extends: .build-windows-msvc
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_windows_msvc:v15
   variables:
     CFLAGS: -D_CRT_SECURE_NO_DEPRECATE /MT /EHsc /arch:AVX
-    CMAKE_OPT: -DAFF3CT_JSON=${JSON} -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DSPU_STACKTRACE=OFF -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} #-DCMAKE_VERBOSE_MAKEFILE=ON 
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DSPU_STACKTRACE=OFF -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} #-DCMAKE_VERBOSE_MAKEFILE=ON
     NAME: build_windows_msvc_avx
 
   script:
     - ./ci/windows/build-windows-msvc.bat
 
-build-windows-msvc-avx_JSON-artifact:
-  extends: .build-windows-msvc-avx_JSON
+build-windows-msvc-avx-artifacts:
+  extends: .build-windows-msvc-avx
   artifacts:
     name: build-windows-msvc-avx
     paths:
@@ -116,8 +109,8 @@ build-windows-msvc-avx_JSON-artifact:
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "master" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "develop"
 
-build-windows-msvc-avx_JSON:
-  extends: .build-windows-msvc-avx_JSON
+build-windows-msvc-avx:
+  extends: .build-windows-msvc-avx
   rules: 
     - if: $CI_SERVER_HOST != "gitlab.com" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop"

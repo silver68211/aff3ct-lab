@@ -1,7 +1,22 @@
-################################# Build Linux ####################################################################################################################################################################################
+######################
+## build linux jobs ##
+######################
 
-
-##################################################################################### gcc """"""""""""""""""""
+.build-linux:
+  extends: .config-common-linux
+  stage: build
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+    BUILD_DIR_EXPORT: false
+  needs:
+  - job: analysis-cppcheck
+    artifacts: false
+  - job: analysis-headers
+    artifacts: false
+  script:
+    - source ./ci/tools/threads.sh
+    - ./ci/build-linux-macos.sh
+    - if [ "$BUILD_DIR_EXPORT" = "true" ]; then echo "BUILD_DIR=${NAME}" >> build.env; fi
 
 .build-linux-gcc:
   extends: .build-linux
@@ -11,10 +26,12 @@
     CXX: g++
     CFLAGS: -Wall -funroll-loops $CFLAGS_SPE
     CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=${AFF3CT_PREC} -DAFF3CT_EXT_STRINGS=OFF ${CMAKE_OPT_SPE}
-    NAME: build_linux_${COMPILER}_json_${JSON}
+    NAME: build_linux_${COMPILER}
 
-######### build-linux-gcc (used for regressions)
+# GCC
+# ---
 
+# used for regressions
 build-linux-gcc:
   extends: .build-linux-gcc
   parallel:
@@ -28,14 +45,10 @@ build-linux-gcc:
   artifacts:
     reports:
       dotenv: build.env
-    name: build-linux-${COMPILER}-json-${JSON}
+    name: build-linux-${COMPILER}
     paths:
       - ${NAME}
 
-
-
-######### build-linux-gcc-opt
-      
 .build-linux-gcc-opt:
   extends: .build-linux-gcc
   parallel:
@@ -55,10 +68,10 @@ build-linux-gcc:
         AFF3CT_PREC: '8'
         CMAKE_OPT_SPE: -DAFF3CT_LINK_GSL=ON
 
-build-linux-gcc-opt-artifact:
+build-linux-gcc-opt-artifacts:
   extends: .build-linux-gcc-opt
   artifacts:
-    name: build-linux-${COMPILER}-json-${JSON}
+    name: build-linux-${COMPILER}
     paths:
       - ${NAME}
   rules: 
@@ -71,8 +84,6 @@ build-linux-gcc-opt:
     - if: $CI_SERVER_HOST != "gitlab.com" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop" 
 
-######### build-linux-gcc-mpi
-
 .build-linux-gcc-mpi:
   extends: .build-linux-gcc
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_openmpi:v4.0.3
@@ -81,11 +92,10 @@ build-linux-gcc-opt:
     CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=OFF -DAFF3CT_COMPILE_SHARED_LIB=OFF -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON -DAFF3CT_MPI=ON
     COMPILER: gcc-mpi
 
-
-build-linux-gcc-mpi-artifact:
+build-linux-gcc-mpi-artifacts:
   extends: .build-linux-gcc-mpi
   artifacts:
-    name: build-linux-${COMPILER}-json-${JSON}
+    name: build-linux-${COMPILER}
     paths:
       - ${NAME}
   rules: 
@@ -98,15 +108,13 @@ build-linux-gcc-mpi:
     - if: $CI_SERVER_HOST != "gitlab.com" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop" 
 
-######### build-linux-gcc-coverage
-
 build-linux-gcc-coverage:
   extends: .build-linux-gcc
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
   variables:
     CFLAGS_SPE: -msse4.2 --coverage
     LFLAGS: --coverage
-    CMAKE_OPT: -DAFF3CT_JSON=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_DEBUG=-O0 -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_PREC=MULTI
+    CMAKE_OPT: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_DEBUG=-O0 -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_PREC=MULTI
   artifacts:
     name: build
     paths:
@@ -118,12 +126,37 @@ build-linux-gcc-coverage:
     - find build/CMakeFiles/aff3ct-obj.dir/ -name "*.o" -type f -delete
     - tar -czvf build.tar.gz build
 
+# CLANG
+# -----
 
-##################################################################################### clang """"""""""""""""""""
+.build-linux-clang:
+  extends: .build-linux
+  variables:
+    CC: clang
+    CXX: clang++
+    CFLAGS: -Wall -Wno-overloaded-virtual -funroll-loops
+    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON
+    NAME: build_linux_clang
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
 
-#no plafrim module equivalent so in main pipline file
+build-linux-clang-artifacts:
+  extends: .build-linux-clang
+  artifacts:
+    name: build-linux-clang
+    paths:
+      - ${NAME}
+  rules:
+    - if: '$CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "develop"'
 
-##################################################################################### icpc """"""""""""""""""""
+build-linux-clang:
+  extends: .build-linux-clang
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_SERVER_HOST != "gitlab.com"
+    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop"
+
+# ICPC
+# ----
 
 .build-linux-icpc:
   extends: .build-linux
@@ -131,27 +164,16 @@ build-linux-gcc-coverage:
     CC: icc
     CXX: icpc
   image: intel/oneapi-hpckit:2022.2-devel-ubuntu20.04
-  before_script:
-  - hostname
-  - whoami
-  - wget -qO - https://repositories.intel.com/gpu/intel-graphics.key | gpg --yes --dearmor --output /usr/share/keyrings/intel-graphics-archive-keyring.gpg
-  - apt-get update
-  - apt-get install -y nlohmann-json3-dev
-
 
 .build-linux-icpc-test:
   extends: .build-linux-icpc
-  parallel:
-    matrix:
-      - JSON: ['OFF']
   variables:
     GIT_TAG: v0.0.0
     CFLAGS: -Wall -funroll-loops -march=native -std=c++11
     CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=OFF -DAFF3CT_LINK_MKL=ON
     NAME: build_linux_icpc
 
-
-build-linux-gcc-icpc-artifact:
+build-linux-gcc-icpc-artifacts:
   extends: .build-linux-icpc-test
   artifacts:
     name: build-linux-icpc
@@ -167,8 +189,9 @@ build-linux-gcc-icpc:
     - if: $CI_SERVER_HOST != "gitlab.com" 
     - if: $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop"
 
-
-####################################################### Check ################################################################################################################################################################
+################
+## check jobs ##
+################
 
 check-documentation:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_python:v3.8.5
@@ -184,8 +207,9 @@ check-documentation:
   script:
     - ./ci/check-documentation.py --aff3ct "${BUILD_DIR}/bin/aff3ct"
 
-    
-################################# Regression ####################################################################################################################################################################################
+#####################
+## regression jobs ##
+#####################
 
 test-regression:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_python:v3.8.5
@@ -228,9 +252,9 @@ test-regression:
     - export TIME_SEC="${!VAR_NAME}"
     - ./ci/test-regression.py --refs-path refs/${CODE} --results-path test-regression-results-${RESULT} --build-path ${BUILD_DIR} --binary-path bin/aff3ct-$GIT_VERSION --max-snr-time $TIME_SEC --sensibility 2.5 --weak-rate 0.9 --verbose 1 --n-threads $THREADS
 
-####################################################### TEST ################################################################################################################################################################
-
-### Coverage
+###################
+## coverage jobs ##
+###################
 
 .test-coverage:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_coverage

@@ -1,9 +1,7 @@
+# CI environment
 
 variables:
   GIT_SUBMODULE_STRATEGY: none
-
-
-###### CI environment
 
 workflow:
   auto_cancel:
@@ -17,7 +15,7 @@ workflow:
     - if: $CI_AFF3CT_ON_JOB_FAILURE == "none"
       auto_cancel:
         on_job_failure: none
-    - if: $CI_AFF3CT_ON_JOB_FAILURE != "none"
+    - if: $CI_AFF3CT_ON_JOB_FAILURE == "all"
       auto_cancel:
         on_job_failure: all
 
@@ -29,7 +27,7 @@ stages:
   - coverage
   - deploy
 
-###### Default
+# default values
 
 default:
   artifacts:
@@ -41,9 +39,7 @@ before_script:
   - whoami
   - pwd
 
-###### Environment
-
-### Linux
+# generic configuration for linux
 
 .tags-linux:
   tags:
@@ -56,11 +52,10 @@ before_script:
   before_script:
     - hostname
     - whoami
-    - apt-get update
-    - apt-get install -y nlohmann-json3-dev
 
-
-################################# Analysis ####################################################################################################################################################################################
+###################
+## analysis jobs ##
+###################
 
 analysis-headers:
   extends: .tags-linux
@@ -97,7 +92,8 @@ analysis-clang-format:
   image: ubuntu:22.04
   stage: analysis
   script:
-    - apt-get -y install clang-format
+    - apt update
+    - apt -y install clang-format
     - clang-format --version
     - mkdir original_code
     - cp -r include original_code
@@ -133,7 +129,6 @@ analysis-clang:
     - source ./ci/tools/threads.sh
     - ./ci/analysis-clang.sh
 
-
 analysis-documentation:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_doc
   stage: analysis
@@ -152,86 +147,25 @@ analysis-documentation:
     - export THREADS="1"
     - ./ci/analysis-documentation.sh
 
-################################# Build Linux ####################################################################################################################################################################################
-
-.build-linux:
-  extends: .config-common-linux
-  stage: build
-  variables:
-    GIT_SUBMODULE_STRATEGY: recursive
-    BUILD_DIR_EXPORT: false
-  needs:
-  - job: analysis-cppcheck
-    artifacts: false
-  - job: analysis-headers
-    artifacts: false
-  script:
-    - source ./ci/tools/threads.sh
-    - ./ci/build-linux-macos.sh
-    - if [ "$BUILD_DIR_EXPORT" = "true" ]; then echo "BUILD_DIR=${NAME}" >> build.env; fi
-
-##################################################################################### clang """"""""""""""""""""
-#no plafrim module so in main pipline file
-
-.build-linux-clang:
-  extends: .build-linux
-  variables:
-    CC: clang
-    CXX: clang++
-    CFLAGS: -Wall -Wno-overloaded-virtual -funroll-loops
-    CMAKE_OPT: -DAFF3CT_COMPILE_EXE=ON -DAFF3CT_COMPILE_STATIC_LIB=ON -DAFF3CT_COMPILE_SHARED_LIB=ON -DAFF3CT_PREC=MULTI -DAFF3CT_EXT_STRINGS=OFF -DAFF3CT_LINK_GSL=ON
-    NAME: build_linux_clang
-  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_clang:v10.0.0
-
-
-
-build-linux-clang-artifact:
-  extends: .build-linux-clang
-  artifacts:
-    name: build-linux-clang
-    paths:
-      - ${NAME}
-  rules: 
-    - if: '$CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "master"'
-    - if: '$CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH == "develop"'
-
-build-linux-clang:
-  extends: .build-linux-clang
-  rules: 
-    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_SERVER_HOST != "gitlab.com"
-    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_SERVER_HOST == "gitlab.com" && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "develop"
-
-####################################################### Options ################################################################################################################################################################
-
 include:
-  # Tests needing specific Runner
+  # standard linux jobs (build, check, regression, coverage)
+  - local: 'ci/linux/ci-linux-std.yml'
+    rules:
+      - if: $CI_PIPELINE_SOURCE != "schedule"
+  # conditional windows jobs (build)
   - local: 'ci/windows/ci-windows.yml'
     rules: 
       - if: $CI_AFF3CT_RUNNERS_WINDOWS == "ON" && $CI_PIPELINE_SOURCE != "schedule"
+  # conditional macos jobs (build)
   - local: 'ci/macos/ci-macos.yml'
     rules: 
       - if: $CI_AFF3CT_RUNNERS_MACOS == "ON" && $CI_PIPELINE_SOURCE != "schedule"
-
-  # Alternative runner for main pipline
-  # 1 Plafrim
-  # - local: 'ci/ci-plafrim.yml'
-  #   rules:
-  #     - if: $CI_AFF3CT_RUNNER_PLAFRIM == "ON" && $CI_PIPELINE_SOURCE != "schedule"
-  # 2 Standard Linux runner
-  - local: 'ci/ci-no-plafrim.yml'
-    rules:
-      - if: $CI_PIPELINE_SOURCE != "schedule"
-    #   - if: $CI_AFF3CT_RUNNER_PLAFRIM == "OFF" && $CI_PIPELINE_SOURCE != "schedule"
-  
-  # Deploy
-  - local: 'ci/deploy/deploy_gitlab_com.yml'
+  # deploy jobs depending on branches and repository location
+  - local: 'ci/deploy/deploy-gitlab-com.yml'
     rules: 
       - if: $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_BRANCH == "ppa_upload"
       - if: $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_BRANCH == "develop"
       - if: $CI_SERVER_HOST == "gitlab.com" && $CI_PIPELINE_SOURCE != "schedule" && $CI_COMMIT_BRANCH == "master" 
-  - local: 'ci/deploy/deploy_github_com.yml'
+  - local: 'ci/deploy/deploy-github-com.yml'
     rules: 
-      - if: $CI_SERVER_HOST == "github.com" && $CI_COMMIT_BRANCH == "develop" &&  $CI_PIPELINE_SOURCE != "schedule"
-
-
-
+      - if: $CI_SERVER_HOST == "github.com" && $CI_COMMIT_BRANCH == "develop" && $CI_PIPELINE_SOURCE != "schedule"
