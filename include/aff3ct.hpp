@@ -462,6 +462,9 @@
 #ifndef DECODER_REPETITION_STD
 #include <Module/Decoder/Repetition/Decoder_repetition_std.hpp>
 #endif
+#ifndef DECODER_REPETITION_VOTE
+#include <Module/Decoder/Repetition/Decoder_repetition_vote.hpp>
+#endif
 #ifndef DECODER_RSC_BCJR_HPP_
 #include <Module/Decoder/RSC/BCJR/Decoder_RSC_BCJR.hpp>
 #endif

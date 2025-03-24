@@ -9,7 +9,7 @@ Repetition Decoder parameters
 """"""""""""""""""
 
    :Type: text
-   :Allowed values: ``REPETITION`` ``CHASE`` ``ML``
+   :Allowed values: ``REPETITION`` ``REPETITION_VOTE`` ``CHASE`` ``ML``
    :Default: ``REPETITION``
    :Examples: ``--dec-type CHASE``
 
@@ -17,17 +17,22 @@ Repetition Decoder parameters
 
 Description of the allowed values:
 
-+----------------+-----------------------------+
-| Value          | Description                 |
-+================+=============================+
-| ``REPETITION`` | |dec-type_descr_repetition| |
-+----------------+-----------------------------+
-| ``CHASE``      | |dec-type_descr_chase|      |
-+----------------+-----------------------------+
-| ``ML``         | |dec-type_descr_ml|         |
-+----------------+-----------------------------+
++---------------------+-----------------------------+
+| Value               | Description                 |
++=====================+=============================+
+| ``REPETITION``      | |dec-type_descr_repetition| |
++---------------------+-----------------------------+
+| ``REPETITION_VOTE`` | |dec-type_descr_rep_vote|   |
++---------------------+-----------------------------+
+| ``CHASE``           | |dec-type_descr_chase|      |
++---------------------+-----------------------------+
+| ``ML``              | |dec-type_descr_ml|         |
++---------------------+-----------------------------+
 
-.. |dec-type_descr_repetition| replace:: Select the repetition decoder.
+.. |dec-type_descr_repetition| replace:: Select the repetition decoder (computes
+   the mean probability per information bit)
+.. |dec-type_descr_rep_vote| replace:: Select the repetition decoder (performs a
+   majority vote on hard decided inputs).
 .. |dec-type_descr_chase| replace:: See the common :ref:`dec-common-dec-type`
    parameter.
 .. |dec-type_descr_ml| replace:: See the common :ref:`dec-common-dec-type`

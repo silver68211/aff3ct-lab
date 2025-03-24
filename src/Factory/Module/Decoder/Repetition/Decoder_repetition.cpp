@@ -4,6 +4,7 @@
 #include "Factory/Module/Decoder/Repetition/Decoder_repetition.hpp"
 #include "Module/Decoder/Repetition/Decoder_repetition_fast.hpp"
 #include "Module/Decoder/Repetition/Decoder_repetition_std.hpp"
+#include "Module/Decoder/Repetition/Decoder_repetition_vote.hpp"
 #include "Tools/Documentation/documentation.h"
 
 using namespace aff3ct;
@@ -33,7 +34,7 @@ Decoder_repetition ::get_description(cli::Argument_map_info& args) const
     auto p = this->get_prefix();
     const std::string class_name = "factory::Decoder_repetition::";
 
-    cli::add_options(args.at({ p + "-type", "D" }), 0, "REPETITION");
+    cli::add_options(args.at({ p + "-type", "D" }), 0, "REPETITION", "REPETITION_VOTE");
     cli::add_options(args.at({ p + "-implem" }), 0, "STD", "FAST");
 
     tools::add_arg(args, p, class_name + "p+no-buff", cli::None());
@@ -78,6 +79,11 @@ Decoder_repetition ::build(module::Encoder<B>* encoder) const
                 return new module::Decoder_repetition_std<B, Q>(this->K, this->N_cw, this->buffered);
             if (this->implem == "FAST")
                 return new module::Decoder_repetition_fast<B, Q>(this->K, this->N_cw, this->buffered);
+        }
+        if (this->type == "REPETITION_VOTE")
+        {
+            if (this->implem == "STD")
+                return new module::Decoder_repetition_vote<B, Q>(this->K, this->N_cw, this->buffered);
         }
     }
 
