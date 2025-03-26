@@ -30,7 +30,7 @@ Decoder_repetition_vote<B, R>::_decode_siso_alt(const R* sys, const R* par, R* e
 {
     for (auto i = 0; i < this->K; i++)
     {
-        ext[i] = sys[i];
+        ext[i] = (sys[i] > 0) ? 1 : -1;
         for (auto j = 0; j < this->rep_count; j++)
             ext[i] += (par[j * this->K + i] > 0) ? 1 : -1; // vote
     }
