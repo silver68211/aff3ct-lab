@@ -609,6 +609,9 @@
 #ifndef ENCODER_POLAR_HPP_
 #include <Module/Encoder/Polar/Encoder_polar.hpp>
 #endif
+#ifndef ENCODER_POLAR_PAC_HPP_
+#include <Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp>
+#endif
 #ifndef ENCODER_POLAR_SYS_HPP_
 #include <Module/Encoder/Polar/Encoder_polar_sys.hpp>
 #endif

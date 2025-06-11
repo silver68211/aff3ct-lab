@@ -13,6 +13,7 @@
 #include "Launcher/Code/LDPC/LDPC.hpp"
 #include "Launcher/Code/Polar/Polar.hpp"
 #include "Launcher/Code/Polar_MK/Polar_MK.hpp"
+#include "Launcher/Code/Polar_PAC/Polar_PAC.hpp"
 #include "Launcher/Code/RA/RA.hpp"
 #include "Launcher/Code/RS/RS.hpp"
 #include "Launcher/Code/RSC/RSC.hpp"
@@ -58,13 +59,24 @@ Launcher ::get_description(cli::Argument_map_info& args) const
     auto p = this->get_prefix();
     const std::string class_name = "factory::Launcher::";
 
-    tools::add_arg(
-      args,
-      p,
-      class_name + "p+cde-type,C",
-      cli::Text(cli::Including_set(
-        "POLAR", "POLAR_MK", "TURBO", "TURBO_DB", "TPC", "LDPC", "REP", "RA", "RSC", "RSC_DB", "BCH", "UNCODED", "RS")),
-      cli::arg_rank::REQ);
+    tools::add_arg(args,
+                   p,
+                   class_name + "p+cde-type,C",
+                   cli::Text(cli::Including_set("POLAR",
+                                                "POLAR_MK",
+                                                "POLAR_PAC",
+                                                "TURBO",
+                                                "TURBO_DB",
+                                                "TPC",
+                                                "LDPC",
+                                                "REP",
+                                                "RA",
+                                                "RSC",
+                                                "RSC_DB",
+                                                "BCH",
+                                                "UNCODED",
+                                                "RS")),
+                   cli::arg_rank::REQ);
 
     tools::add_arg(args, p, class_name + "p+type", cli::Text(cli::Including_set("BFER", "BFERI")));
 
@@ -221,6 +233,10 @@ Launcher ::build(const int argc, const char** argv) const
     if (this->cde_type == "POLAR_MK")
     {
         if (this->sim_type == "BFER") return new launcher::Polar_MK<launcher::BFER_std<B, R, Q>, B, R, Q>(argc, argv);
+    }
+    if (this->cde_type == "POLAR_PAC")
+    {
+        if (this->sim_type == "BFER") return new launcher::Polar_PAC<launcher::BFER_std<B, R, Q>, B, R, Q>(argc, argv);
     }
 
     if (this->cde_type == "RSC")
