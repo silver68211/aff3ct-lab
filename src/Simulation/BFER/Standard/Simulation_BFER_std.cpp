@@ -53,12 +53,17 @@ template<typename B, typename R, typename Q>
 std::unique_ptr<tools::Codec_SIHO<B, Q>>
 Simulation_BFER_std<B, R, Q>::build_codec(const module::CRC<B>* crc)
 {
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     std::unique_ptr<factory::Codec> params_cdc(params_BFER_std.cdc->clone());
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     auto crc_ptr = this->params_BFER_std.crc->type == "NO" ? nullptr : crc;
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     auto param_siho = dynamic_cast<factory::Codec_SIHO*>(params_cdc.get());
-
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     auto cdc = std::unique_ptr<tools::Codec_SIHO<B, Q>>(param_siho->build<B, Q>(crc_ptr));
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     cdc->set_n_frames(this->params.n_frames);
+    std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;
     return cdc;
 }
 
@@ -136,9 +141,16 @@ Simulation_BFER_std<B, R, Q>::create_modules()
 {
     Simulation_BFER<B, R>::create_modules();
 
+    std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;
     this->source = this->build_source();
+    std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;
     this->crc = this->build_crc();
+    std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;
+    /*auto crcPtr = this->params_BFER_std.crc->type == "NO" ? nullptr : this->crc.get();*/
+    /*auto crcPtr = this->params_BFER_std.crc->type == "NO" ? nullptr : this->crc.get();*/
     this->codec = this->build_codec(this->crc.get());
+    /*this->codec = this->build_codec(crcPtr);*/
+    std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;
     this->modem = this->build_modem(this->distributions.get(), this->constellation.get());
     this->channel = this->build_channel(this->distributions.get());
     this->quantizer = this->build_quantizer();

@@ -50,9 +50,10 @@ template<typename B, typename Q>
 module::Puncturer_polar_shortlast<B, Q>*
 Puncturer_polar ::build(const tools::Frozenbits_generator& fb_generator) const
 {
-    if (this->type == "SHORTLAST") return new module::Puncturer_polar_shortlast<B, Q>(this->K, this->N, fb_generator);
 
-    throw spu::tools::cannot_allocate(__FILE__, __LINE__, __func__);
+    if (this->type == "SHORTLAST") return new module::Puncturer_polar_shortlast<B, Q>(this->K, this->N, fb_generator);
+    return new module::Puncturer_polar_shortlast<B, Q>(this->K, this->N, fb_generator);
+    /*throw spu::tools::cannot_allocate(__FILE__, __LINE__, __func__);*/
 }
 
 // ==================================================================================== explicit template instantiation

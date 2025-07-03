@@ -92,10 +92,12 @@ Codec_polar<B, Q>::Codec_polar(const factory::Frozenbits_generator& fb_params,
     {
         this->set_encoder(static_cast<const factory::Encoder*>(&enc_params)->build<B>());
     }
+    std::cout << "Calling the decoder constructor" << __FILE__ << std::endl;
 
     try
     {
         this->set_decoder_siso(dec_params.build_siso<B, Q>(*frozen_bits, &this->get_encoder()));
+
     }
     catch (const std::exception&)
     {
@@ -104,6 +106,7 @@ Codec_polar<B, Q>::Codec_polar(const factory::Frozenbits_generator& fb_params,
         else
             this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
     }
+    std::cout << "Done constructing the decoder" << __FILE__ << std::endl;
 
     try
     {

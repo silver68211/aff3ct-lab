@@ -11,7 +11,6 @@
 
 using namespace aff3ct;
 using namespace aff3ct::module;
-
 template<typename B, typename R>
 Decoder_polar_PAC_SCL_naive<B, R>::Decoder_polar_PAC_SCL_naive(
   const int& K,
