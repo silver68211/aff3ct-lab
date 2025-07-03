@@ -106,13 +106,12 @@ Decoder_RA<B, R>::_decode_siho(const R* Y_N, B* V_K, const size_t frame_id)
 
         // Backward
         Bw[this->N - 2] = check_node(Y_N[this->N - 1], Td[this->N - 1]);
-
         for (auto i = this->N - 3; i >= 0; i--)
             Bw[i] = check_node(Bw[i + 1] + Y_N[i + 1], Td[i + 1]);
 
         // Extrinsic
         Tu[0] = Bw[0] + Y_N[0];
-        Tu[this->N - 1] = check_node(Y_N[this->N - 1], Y_N[this->N - 2] + Fw[this->N - 2]);
+        Tu[this->N - 1] = check_node(Fw[this->N - 2] + Y_N[this->N - 2], Y_N[this->N - 1]);
         for (auto i = 1; i < this->N - 1; i++)
             Tu[i] = check_node(Fw[i - 1] + Y_N[i - 1], Bw[i] + Y_N[i]);
 
