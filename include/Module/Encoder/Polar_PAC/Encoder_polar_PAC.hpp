@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "Module/Encoder/Encoder.hpp"
-#include "Tools/Code/Polar/Polar_code.hpp"
 #include "Tools/Interface/Interface_get_set_frozen_bits.hpp"
 
 namespace aff3ct
@@ -21,35 +20,29 @@ class Encoder_polar_PAC
   , public tools::Interface_get_set_frozen_bits
 {
   protected:
-    const tools::Polar_code& code;
-    std::vector<bool> frozen_bits;
-    std::vector<std::vector<B>> Ke;
-    std::vector<uint32_t> idx;
-    std::vector<B> u;
-    std::vector<B> conv_reg;
-    std::vector<B> curState;
-
+    const int m;                   // log_2 of code length
+    std::vector<bool> frozen_bits; // true means frozen, false means set to 0/1
+    std::vector<B> X_N_tmp;
 
   public:
-    Encoder_polar_PAC(const int& K, const int& N, const tools::Polar_code& code, const std::vector<bool>& frozen_bits);
-
+    Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits);
     virtual ~Encoder_polar_PAC() = default;
 
     virtual Encoder_polar_PAC<B>* clone() const;
 
-    // bool is_codeword(const B *X_N);
-    virtual void set_frozen_bits(const std::vector<bool>& frozen_bits);
+    void light_encode(B* bits);
+
+    bool is_codeword(const B* X_N);
+
     virtual const std::vector<bool>& get_frozen_bits() const;
+    virtual void set_frozen_bits(const std::vector<bool>& frozen_bits);
 
   protected:
     virtual void _encode(const B* U_K, B* X_N, const size_t frame_id);
     void convert(const B* U_K, B* U_N);
-    void light_encode(B* X_N);
-    void Conv1bitEnc(B cbit);
-    void ConvEncoder(B* X_N);
-
 };
 }
 }
 
 #endif // ENCODER_POLAR_PAC_HPP_
+

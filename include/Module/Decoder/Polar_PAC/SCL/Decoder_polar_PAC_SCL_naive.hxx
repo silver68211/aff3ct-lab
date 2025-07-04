@@ -17,9 +17,9 @@ namespace module
 {
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& K,
-                                                                     const int& N,
-                                                                     const int& L,
-                                                                     const std::vector<bool>& frozen_bits)
+                                                             const int& N,
+                                                             const int& L,
+                                                             const std::vector<bool>& frozen_bits)
   : Decoder_SIHO<B, R>(K, N)
   , m((int)std::log2(N))
   , metric_init(std::numeric_limits<R>::min())
@@ -27,11 +27,11 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
   , L(L)
   , polar_trees(L, tools::Binary_tree_metric<Contents_SCL<B, R>, R>(this->m + 1, metric_init))
 {
+    std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;
     const std::string name = "Decoder_polar_PAC_SCL_naive";
     this->set_name(name);
-    for (auto& t : this->tasks)
-        t->set_replicability(true);
 
+    std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;
     if (!spu::tools::is_power_of_2(this->N))
     {
         std::stringstream message;
@@ -73,6 +73,9 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     }
     for (auto i = 0; i < L; i++)
         leaves_array.push_back(this->polar_trees[i].get_leaves());
+
+    for (auto& t : this->tasks)
+        t->set_replicability(true);
 }
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
@@ -107,7 +110,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::deep_copy(const Decoder_polar_PAC_SCL_n
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 void
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_deep_copy(const tools::Binary_node<Contents_SCL<B, R>>* nref,
-                                                             tools::Binary_node<Contents_SCL<B, R>>* nclone)
+                                                         tools::Binary_node<Contents_SCL<B, R>>* nclone)
 {
     auto cref = nref->get_contents();
     auto cclone = new Contents_SCL<B, R>(*cref);
@@ -347,8 +350,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_store(B* V, bool coded) const
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 void
-Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_compute_llr(tools::Binary_node<Contents_SCL<B, R>>* node_cur,
-                                                               int depth)
+Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_compute_llr(tools::Binary_node<Contents_SCL<B, R>>* node_cur, int depth)
 {
     if (depth != 0) recursive_compute_llr(node_cur->get_father(), --depth);
 
@@ -369,7 +371,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::propagate_sums(const tools::Binary_node
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 void
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_duplicate_tree_llr(tools::Binary_node<Contents_SCL<B, R>>* node_a,
-                                                                      tools::Binary_node<Contents_SCL<B, R>>* node_b)
+                                                                  tools::Binary_node<Contents_SCL<B, R>>* node_b)
 {
     node_b->get_c()->lambda = node_a->get_c()->lambda;
 
@@ -379,10 +381,9 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_duplicate_tree_llr(tools::Bin
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 void
-Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_duplicate_tree_sums(
-  tools::Binary_node<Contents_SCL<B, R>>* node_a,
-  tools::Binary_node<Contents_SCL<B, R>>* node_b,
-  tools::Binary_node<Contents_SCL<B, R>>* node_caller)
+Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_duplicate_tree_sums(tools::Binary_node<Contents_SCL<B, R>>* node_a,
+                                                                   tools::Binary_node<Contents_SCL<B, R>>* node_b,
+                                                                   tools::Binary_node<Contents_SCL<B, R>>* node_caller)
 {
     if (node_a->get_left() != node_caller && !node_a->is_leaf())
         node_b->get_left()->get_c()->s = node_a->get_left()->get_c()->s;
@@ -474,8 +475,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_initialize_frozen_bits(
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 void
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_store(const tools::Binary_node<Contents_SCL<B, R>>* node_curr,
-                                                         B* V_K,
-                                                         int& k) const
+                                                     B* V_K,
+                                                     int& k) const
 {
     auto* contents = node_curr->get_contents();
 
@@ -552,3 +553,4 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::compute_sums(const tools::Binary_node<C
 }
 }
 }
+

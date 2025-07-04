@@ -12,7 +12,6 @@
 
 #include "Factory/Module/Encoder/Encoder.hpp"
 #include "Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
-#include "Tools/Code/Polar/Polar_code.hpp"
 #include "Tools/Factory/Header.hpp"
 
 namespace aff3ct
@@ -25,7 +24,7 @@ class Encoder_polar_PAC : public Encoder
 {
   public:
     // ----------------------------------------------------------------------------------------------------- PARAMETERS
-    // optional
+    // empty
 
     // -------------------------------------------------------------------------------------------------------- METHODS
     explicit Encoder_polar_PAC(const std::string& p = Encoder_polar_PAC_prefix);
@@ -39,9 +38,10 @@ class Encoder_polar_PAC : public Encoder
 
     // builder
     template<typename B = int>
-    module::Encoder_polar_PAC<B>* build(const tools::Polar_code& code, const std::vector<bool>& frozen_bits) const;
+    module::Encoder_polar_PAC<B>* build(const std::vector<bool>& frozen_bits) const;
 };
 }
 }
 
 #endif /* FACTORY_ENCODER_POLAR_PAC_HPP */
+

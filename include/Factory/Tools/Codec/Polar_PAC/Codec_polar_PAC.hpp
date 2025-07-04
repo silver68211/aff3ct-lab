@@ -10,9 +10,8 @@
 #include <string>
 #include <vector>
 
-#include "Factory/Tools/Code/Polar_PAC/Frozenbits_generator_PAC.hpp"
-#include "Factory/Tools/Code/Polar_MK/Polar_code.hpp"
-#include "Factory/Tools/Codec/Codec_SIHO.hpp"
+#include "Factory/Tools/Code/Polar/Frozenbits_generator.hpp"
+#include "Factory/Tools/Codec/Codec_SISO.hpp"
 #include "Module/CRC/CRC.hpp"
 #include "Tools/Codec/Polar_PAC/Codec_polar_PAC.hpp"
 #include "Tools/Factory/Header.hpp"
@@ -23,18 +22,18 @@ namespace factory
 {
 extern const std::string Codec_polar_PAC_name;
 extern const std::string Codec_polar_PAC_prefix;
-class Codec_polar_PAC : public Codec_SIHO
+class Codec_polar_PAC : public Codec_SISO
 {
   public:
     // ----------------------------------------------------------------------------------------------------- PARAMETERS
     // depending parameters
-    tools::auto_cloned_unique_ptr<Polar_code> pc;
-    tools::auto_cloned_unique_ptr<Frozenbits_generator_PAC> fbg;
+    tools::auto_cloned_unique_ptr<Frozenbits_generator> fbg;
 
     // -------------------------------------------------------------------------------------------------------- METHODS
     explicit Codec_polar_PAC(const std::string& p = Codec_polar_PAC_prefix);
     virtual ~Codec_polar_PAC() = default;
     Codec_polar_PAC* clone() const;
+    void enable_puncturer();
 
     virtual std::vector<std::string> get_names() const;
     virtual std::vector<std::string> get_short_names() const;
@@ -53,3 +52,4 @@ class Codec_polar_PAC : public Codec_SIHO
 }
 
 #endif /* FACTORY_CODEC_POLAR_PAC_HPP */
+

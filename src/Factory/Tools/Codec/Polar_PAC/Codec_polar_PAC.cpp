@@ -1,6 +1,7 @@
 #include "Factory/Tools/Codec/Polar_PAC/Codec_polar_PAC.hpp"
 #include "Factory/Module/Decoder/Polar_PAC/Decoder_polar_PAC.hpp"
 #include "Factory/Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
+#include "Factory/Module/Puncturer/Polar/Puncturer_polar.hpp"
 
 using namespace aff3ct;
 using namespace aff3ct::factory;
@@ -9,19 +10,24 @@ const std::string aff3ct::factory::Codec_polar_PAC_name = "Codec Polar PAC";
 const std::string aff3ct::factory::Codec_polar_PAC_prefix = "cdc";
 
 Codec_polar_PAC ::Codec_polar_PAC(const std::string& prefix)
-  : Codec_SIHO(Codec_polar_PAC_name, prefix)
+  : Codec_SISO(Codec_polar_PAC_name, prefix)
 {
     Codec::set_enc(new Encoder_polar_PAC("enc"));
     Codec::set_dec(new Decoder_polar_PAC("dec"));
 
-    pc = new Polar_code(enc->get_prefix() + "-pc");
-    fbg = new Frozenbits_generator_PAC(enc->get_prefix() + "-fb");
+    fbg = new Frozenbits_generator(enc->get_prefix() + "-fb");
 }
 
 Codec_polar_PAC*
 Codec_polar_PAC ::clone() const
 {
     return new Codec_polar_PAC(*this);
+}
+
+void
+Codec_polar_PAC ::enable_puncturer()
+{
+    set_pct(new Puncturer_polar("pct"));
 }
 
 std::vector<std::string>
@@ -33,13 +39,9 @@ Codec_polar_PAC ::get_names() const
     for (size_t i = 0; i < n.size(); i++)
     {
         n2.push_back(n[i]);
-        if (enc != nullptr && n[i] == enc->get_name() && pc != nullptr && fbg != nullptr)
+        if (enc != nullptr && n[i] == enc->get_name() && fbg != nullptr)
         {
-            auto nn = pc->get_names();
-            for (auto& x : nn)
-                n2.push_back(x);
-
-            nn = fbg->get_names();
+            auto nn = fbg->get_names();
             for (auto& x : nn)
                 n2.push_back(x);
         }
@@ -58,13 +60,9 @@ Codec_polar_PAC ::get_short_names() const
     for (size_t i = 0; i < sn.size(); i++)
     {
         sn2.push_back(sn[i]);
-        if (enc != nullptr && sn[i] == enc->get_short_name() && pc != nullptr && fbg != nullptr)
+        if (enc != nullptr && sn[i] == enc->get_short_name() && fbg != nullptr)
         {
-            auto nn = pc->get_short_names();
-            for (auto& x : nn)
-                sn2.push_back(x);
-
-            nn = fbg->get_short_names();
+            auto nn = fbg->get_short_names();
             for (auto& x : nn)
                 sn2.push_back(x);
         }
@@ -83,13 +81,9 @@ Codec_polar_PAC ::get_prefixes() const
     for (size_t i = 0; i < p.size(); i++)
     {
         p2.push_back(p[i]);
-        if (enc != nullptr && p[i] == enc->get_prefix() && pc != nullptr && fbg != nullptr)
+        if (enc != nullptr && p[i] == enc->get_prefix() && fbg != nullptr)
         {
-            auto nn = pc->get_prefixes();
-            for (auto& x : nn)
-                p2.push_back(x);
-
-            nn = fbg->get_prefixes();
+            auto nn = fbg->get_prefixes();
             for (auto& x : nn)
                 p2.push_back(x);
         }
@@ -102,39 +96,52 @@ Codec_polar_PAC ::get_prefixes() const
 void
 Codec_polar_PAC ::get_description(cli::Argument_map_info& args) const
 {
-    Codec_SIHO::get_description(args);
+    Codec_SISO::get_description(args);
 
     enc->get_description(args);
-    pc->get_description(args);
     fbg->get_description(args);
     dec->get_description(args);
 
-    auto ppc = pc->get_prefix();
     auto pdec = dec->get_prefix();
     auto pfbg = fbg->get_prefix();
 
     args.erase({ pdec + "-info-bits", "K" });
     args.erase({ pdec + "-no-sys" });
     args.erase({ pdec + "-cw-size", "N" });
-    args.erase({ ppc + "-cw-size", "N" });
     args.erase({ pfbg + "-cw-size", "N" });
     args.erase({ pfbg + "-info-bits", "K" });
+
+    if (pct != nullptr)
+    {
+        pct->get_description(args);
+
+        auto penc = enc->get_prefix();
+
+        args.erase({ penc + "-cw-size", "N" });
+        args.erase({ penc + "-info-bits", "K" });
+    }
 }
 
 void
 Codec_polar_PAC ::store(const cli::Argument_map_value& vals)
 {
-    Codec_SIHO::store(vals);
+    Codec_SISO::store(vals);
+
+    if (pct != nullptr)
+    {
+        pct->store(vals);
+
+        enc->K = fbg->K = dec->K = pct->K;
+        enc->N_cw = fbg->N_cw = dec->N_cw = pct->N_cw;
+    }
 
     enc->store(vals);
 
-    fbg->K = dec->K = enc->K;
-    pc->N_cw = fbg->N_cw = dec->N_cw = enc->N_cw;
-
-    pc->store(vals);
-
-    // if (enc->code_path.empty())
-    // 	fbg->base = enc->kernel_matrix.size();
+    if (pct == nullptr)
+    {
+        fbg->K = dec->K = enc->K;
+        fbg->N_cw = dec->N_cw = enc->N_cw;
+    }
 
     fbg->store(vals);
 
@@ -142,28 +149,32 @@ Codec_polar_PAC ::store(const cli::Argument_map_value& vals)
 
     dec->store(vals);
 
-    K = enc->K;
-    N_cw = enc->N_cw;
-    N = enc->N_cw;
+    K = pct != nullptr ? pct->K : enc->K;
+    N_cw = pct != nullptr ? pct->N_cw : enc->N_cw;
+    N = pct != nullptr ? pct->N : enc->N_cw;
 }
 
 void
 Codec_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& headers, const bool full) const
 {
-    Codec_SIHO::get_headers(headers, full);
+    Codec_SISO::get_headers(headers, full);
 
     enc->get_headers(headers, full);
-    pc->get_headers(headers, full);
     fbg->get_headers(headers, full);
     dec->get_headers(headers, full);
+    if (pct != nullptr) pct->get_headers(headers, full);
 }
 
 template<typename B, typename Q>
 tools::Codec_polar_PAC<B, Q>*
 Codec_polar_PAC ::build(const module::CRC<B>* crc) const
 {
-    return new tools::Codec_polar_PAC<B, Q>(
-      *pc, *fbg, dynamic_cast<const Encoder_polar_PAC&>(*enc), dynamic_cast<const Decoder_polar_PAC&>(*dec), crc);
+    std::cout << "Inside the: " << __func__ << std::endl;
+    return new tools::Codec_polar_PAC<B, Q>(*fbg,
+                                            dynamic_cast<const Encoder_polar_PAC&>(*enc),
+                                            dynamic_cast<const Decoder_polar_PAC&>(*dec),
+                                            dynamic_cast<const Puncturer_polar*>(pct.get()),
+                                            crc);
 }
 
 // ==================================================================================== explicit template instantiation
@@ -182,3 +193,4 @@ template aff3ct::tools::Codec_polar_PAC<B, Q>*
 aff3ct::factory::Codec_polar_PAC::build<B, Q>(const aff3ct::module::CRC<B>*) const;
 #endif
 // ==================================================================================== explicit template instantiation
+

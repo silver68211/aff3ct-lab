@@ -30,12 +30,6 @@ Decoder_polar_SCL_naive<B, R, F, G>::Decoder_polar_SCL_naive(const int& K,
     std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;
     const std::string name = "Decoder_polar_SCL_naive";
     this->set_name(name);
-<<<<<<< HEAD
-    std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;
-    for (auto& t : this->tasks)
-        t->set_replicability(true);
-=======
->>>>>>> 7cc9eb77f5732800328646729ab7dc8a7224fc41
 
     std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;
     if (!spu::tools::is_power_of_2(this->N))
