@@ -31,6 +31,9 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::v
     }
 
     this->set_frozen_bits(frozen_bits);
+
+    conv_reg = { 1, 0, 1, 1, 0, 1, 1 };
+    curState.resize(conv_reg.size() - 1);
 }
 
 template<typename B>
@@ -46,8 +49,56 @@ template<typename B>
 void
 Encoder_polar_PAC<B>::_encode(const B* U_K, B* X_N, const size_t /*frame_id*/)
 {
+    /*std::cout << "Info bits positions: \n";*/
+    /*std::cout << "Frozen bits: " << frozen_bits.size() << std::endl;*/
+    /*for (int i = 0; i < this->N; i++)*/
+    /*{*/
+    /*    std::cout << ((frozen_bits[i]) ? (B)0 : i) << ",";*/
+    /*}*/
+    std::cout << std::endl;
+
     this->convert(U_K, X_N);
+    this->convEnc(X_N);
+    /*std::cout << "intermediate codeword: ";*/
+    /*for (int i = 0; i < this->N; i++)*/
+    /*    std::cout << X_N[i] << " ";*/
+    /*std::cout << std::endl;*/
     this->light_encode(X_N);
+}
+
+template<typename B>
+B
+Encoder_polar_PAC<B>::conv1bitEnc(B cbit)
+{
+
+    B u = cbit & conv_reg[0];
+    for (int i = 1; i < conv_reg.size(); i++)
+    {
+        if (conv_reg[i] == 1)
+        {
+            u = u ^ curState[i - 1];
+        }
+    }
+    for (int i = curState.size() - 1; i >= 1; i--)
+        curState[i] = curState[i - 1];
+    curState[0] = cbit;
+
+    return u;
+}
+
+template<typename B>
+void
+Encoder_polar_PAC<B>::convEnc(B* X_N)
+{
+    /*std::cout << "Inside the conv encoder function \n";*/
+
+    std::vector<uint8_t> cState(conv_reg.size() - 1, 0);
+    std::vector<uint8_t> u(this->N, 0);
+
+    for (int i = 0; i < this->N; ++i)
+    {
+        X_N[i] = conv1bitEnc(X_N[i]);
+    }
 }
 
 template<typename B>
@@ -79,6 +130,10 @@ Encoder_polar_PAC<B>::convert(const B* U_K, B* U_N)
         for (unsigned i = 0; i < frozen_bits.size(); i++)
             U_N[i] = (frozen_bits[i]) ? (B)0 : U_K[j++];
     }
+    /*for (int i = 0; i < this->N; i++)*/
+    /*{*/
+    /*    std::cout << ((frozen_bits[i]) ? (B)0 : i) << ",";*/
+    /*}*/
 }
 
 template<typename B>
@@ -127,4 +182,3 @@ template class aff3ct::module::Encoder_polar_PAC<B_64>;
 template class aff3ct::module::Encoder_polar_PAC<B>;
 #endif
 // ==================================================================================== explicit template instantiation
-

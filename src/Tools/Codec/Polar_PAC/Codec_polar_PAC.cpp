@@ -93,7 +93,7 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
     {
         this->set_encoder(static_cast<const factory::Encoder*>(&enc_params)->build<B>());
     }
-    std::cout << "Calling the decoder constructor" << __FILE__ << std::endl;
+    /*std::cout << "Calling the decoder constructor" << __FILE__ << std::endl;*/
 
     try
     {
@@ -107,7 +107,7 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
         /*else*/
         this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
     }
-    std::cout << "Done constructing the decoder" << __FILE__ << std::endl;
+    /*std::cout << "Done constructing the decoder" << __FILE__ << std::endl;*/
 
     try
     {

@@ -53,6 +53,9 @@ class Decoder_polar_PAC_SCL_naive
     const int L; // maximum paths number
     std::set<int> active_paths;
 
+    std::vector<std::vector<B>> curStates;
+    std::vector<B> conv_reg;
+
     std::vector<tools::Binary_tree_metric<Contents_SCL<B, R>, R>> polar_trees;
     std::vector<std::vector<tools::Binary_node<Contents_SCL<B, R>>*>> leaves_array;
 
@@ -86,6 +89,10 @@ class Decoder_polar_PAC_SCL_naive
                                        tools::Binary_node<Contents_SCL<B, R>>* node_caller);
 
     void duplicate_path(int path, int leaf_index);
+
+    B conv1bitEnc(B cbit);
+    void convEnc(B* X_N);
+
 
   protected:
     virtual void select_best_path(const size_t frame_id);
