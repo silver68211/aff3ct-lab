@@ -174,7 +174,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
     int cur_path;
 
     // tuples to be sorted. <Path,estimated bit,metric>
-    std::vector<std::tuple<int, B, R>> metrics_vec;
+    std::vector<std::tuple<int, B, R, B>> metrics_vec;
 
     // run through each leaf
     for (auto leaf_index = 0; leaf_index < this->N; leaf_index++)
@@ -218,6 +218,9 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 R phi1 = tools::phi<B, R>(polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], u1);
                 metrics_vec.push_back(std::make_tuple(path, u0, phi0, (B)0));
                 metrics_vec.push_back(std::make_tuple(path, u1, phi1, spu::tools::bit_init<B>()));
+                /*metrics_vec.push_back(std::make_tuple(path, u0, phi0));*/
+                /*metrics_vec.push_back(std::make_tuple(path, u1, phi1));*/
+
 
                 min_phi = std::min<R>(min_phi, phi0);
                 min_phi = std::min<R>(min_phi, phi1);
@@ -238,7 +241,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 // sort hypothetic metrics
                 std::sort(metrics_vec.begin(),
                           metrics_vec.end(),
-                          [](std::tuple<int, B, R> x, std::tuple<int, B, R> y)
+                          [](std::tuple<int, B, R, B> x, std::tuple<int, B, R, B> y)
                           { return std::get<2>(x) < std::get<2>(y); });
 
                 // search in worst metrics. If a path is found twice, erase it
@@ -249,7 +252,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     auto it_double =
                       std::find_if(it + 1,
                                    metrics_vec.end(),
-                                   [cur_path](std::tuple<int, B, R> x) { return std::get<0>(x) == cur_path; });
+                                   [cur_path](std::tuple<int, B, R, B> x) { return std::get<0>(x) == cur_path; });
 
                     if (it_double != metrics_vec.end()) active_paths.erase(std::get<0>(*it));
                 }
@@ -264,7 +267,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     auto it_double =
                       std::find_if(it + 1,
                                    metrics_vec.end(),
-                                   [cur_path](std::tuple<int, B, R> x) { return std::get<0>(x) == cur_path; });
+                                   [cur_path](std::tuple<int, B, R, B> x) { return std::get<0>(x) == cur_path; });
 
                     if (it_double != metrics_vec.end())
                     {
@@ -421,6 +424,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::duplicate_path(int path, int leaf_index
     path_leaves = leaves_array[path];
 
     newpath_leaves = leaves_array[newpath];
+    for(int i = 0; i < conv_reg.size() - 1; i++)
+        curStates[newpath][i] = curStates[path][i];
 
     for (auto i = 0; i < leaf_index; i++)
         newpath_leaves[i]->get_c()->s = path_leaves[i]->get_c()->s;
