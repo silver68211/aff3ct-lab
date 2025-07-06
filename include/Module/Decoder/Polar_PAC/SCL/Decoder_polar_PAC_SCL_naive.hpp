@@ -25,13 +25,13 @@ class Contents_PAC_SCL
   public:
     std::vector<R> lambda;
     std::vector<B> s;
-    std::vector<B> u;
+    std::vector<B> v;
     bool is_frozen_bit;
 
     explicit Contents_PAC_SCL(int size)
       : lambda(size)
       , s(size)
-      , u(size)
+      , v(size)
       , is_frozen_bit(0)
     {
         /*std::cout << "Inside the Contents_PAC_SCL constructor function: " << s.size() << ", " << u.size() << std::endl;*/

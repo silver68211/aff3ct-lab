@@ -190,12 +190,12 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
             for (auto path : active_paths)
             {
                 auto cur_leaf = leaves_array[path][leaf_index];
-                cur_leaf->get_c()->u[0] = conv1bitEnc(0, path);
-                /*std::cout << cur_leaf->get_c()->u.size() << ", " << cur_leaf->get_c()->s.size() << std::endl;*/
-                cur_leaf->get_c()->s[0] = 0;
+                cur_leaf->get_c()->v[0] = 0;
+                /*std::cout << cur_leaf->get_c()->v.size() << ", " << cur_leaf->get_c()->s.size() << std::endl;*/
+                cur_leaf->get_c()->s[0] = conv1bitEnc(0, path);
 
                 auto phi_cur = tools::phi<R>(
-                  polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], cur_leaf->get_c()->u[0]);
+                  polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], cur_leaf->get_c()->v[0]);
                 this->polar_trees[path].set_path_metric(phi_cur);
                 min_phi = std::min<R>(min_phi, phi_cur);
             }
@@ -279,6 +279,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     {
                         // choose
                         leaves_array[std::get<0>(*it)][leaf_index]->get_c()->s[0] = std::get<1>(*it);
+                        leaves_array[std::get<0>(*it)][leaf_index]->get_c()->v[0] = std::get<3>(*it);
                         polar_trees[std::get<0>(*it)].set_path_metric(std::get<2>(*it));
                     }
                 }
@@ -358,7 +359,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_store(B* V, bool coded) const
     else
     {
         auto* contents_root = root->get_c();
-        std::copy(contents_root->s.begin(), contents_root->s.begin() + this->N, V);
+        std::copy(contents_root->v.begin(), contents_root->v.begin() + this->N, V);
     }
 }
 
@@ -468,7 +469,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_allocate_nodes_contents(
     if (node_curr != nullptr)
     {
         node_curr->set_contents(new Contents_PAC_SCL<B, R>(vector_size));
-        /*std::cout << "Inside the recursive_allocate_nodes_contents function: " << node_curr->get_c()->u.size() <<
+        /*std::cout << "Inside the recursive_allocate_nodes_contents function: " << node_curr->get_c()->v.size() <<
          * ","*/
         /*          << node_curr->get_c()->s.size() << std::endl;*/
 
