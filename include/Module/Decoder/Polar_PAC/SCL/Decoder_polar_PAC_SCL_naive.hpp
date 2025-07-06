@@ -20,20 +20,23 @@ namespace aff3ct
 namespace module
 {
 template<typename B = int32_t, typename R = float>
-class Contents_SCL
+class Contents_PAC_SCL
 {
   public:
     std::vector<R> lambda;
     std::vector<B> s;
+    std::vector<B> u;
     bool is_frozen_bit;
 
-    explicit Contents_SCL(int size)
+    explicit Contents_PAC_SCL(int size)
       : lambda(size)
       , s(size)
+      , u(size)
       , is_frozen_bit(0)
     {
+        /*std::cout << "Inside the Contents_PAC_SCL constructor function: " << s.size() << ", " << u.size() << std::endl;*/
     }
-    virtual ~Contents_SCL() {}
+    virtual ~Contents_PAC_SCL() {}
 };
 
 template<typename B = int,
@@ -56,8 +59,8 @@ class Decoder_polar_PAC_SCL_naive
     std::vector<std::vector<B>> curStates;
     std::vector<B> conv_reg;
 
-    std::vector<tools::Binary_tree_metric<Contents_SCL<B, R>, R>> polar_trees;
-    std::vector<std::vector<tools::Binary_node<Contents_SCL<B, R>>*>> leaves_array;
+    std::vector<tools::Binary_tree_metric<Contents_PAC_SCL<B, R>, R>> polar_trees;
+    std::vector<std::vector<tools::Binary_node<Contents_PAC_SCL<B, R>>*>> leaves_array;
 
   public:
     Decoder_polar_PAC_SCL_naive(const int& K, const int& N, const int& L, const std::vector<bool>& frozen_bits);
@@ -70,8 +73,8 @@ class Decoder_polar_PAC_SCL_naive
 
   protected:
     void deep_copy(const Decoder_polar_PAC_SCL_naive<B, R, F, G>& m);
-    void recursive_deep_copy(const tools::Binary_node<Contents_SCL<B, R>>* nref,
-                             tools::Binary_node<Contents_SCL<B, R>>* nclone);
+    void recursive_deep_copy(const tools::Binary_node<Contents_PAC_SCL<B, R>>* nref,
+                             tools::Binary_node<Contents_PAC_SCL<B, R>>* nclone);
 
     void _load(const R* Y_N);
     void _decode(const size_t frame_id);
@@ -80,32 +83,31 @@ class Decoder_polar_PAC_SCL_naive
     virtual void _store(B* V, bool coded = false) const;
 
   private:
-    void recursive_compute_llr(tools::Binary_node<Contents_SCL<B, R>>* node_cur, int depth);
-    void propagate_sums(const tools::Binary_node<Contents_SCL<B, R>>* node_cur);
-    void recursive_duplicate_tree_llr(tools::Binary_node<Contents_SCL<B, R>>* node_a,
-                                      tools::Binary_node<Contents_SCL<B, R>>* node_b);
-    void recursive_duplicate_tree_sums(tools::Binary_node<Contents_SCL<B, R>>* node_a,
-                                       tools::Binary_node<Contents_SCL<B, R>>* node_b,
-                                       tools::Binary_node<Contents_SCL<B, R>>* node_caller);
+    void recursive_compute_llr(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_cur, int depth);
+    void propagate_sums(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_cur);
+    void recursive_duplicate_tree_llr(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_a,
+                                      tools::Binary_node<Contents_PAC_SCL<B, R>>* node_b);
+    void recursive_duplicate_tree_sums(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_a,
+                                       tools::Binary_node<Contents_PAC_SCL<B, R>>* node_b,
+                                       tools::Binary_node<Contents_PAC_SCL<B, R>>* node_caller);
 
     void duplicate_path(int path, int leaf_index);
 
-    B conv1bitEnc(B cbit);
+    B conv1bitEnc(B cbit, int l);
     void convEnc(B* X_N);
-
 
   protected:
     virtual void select_best_path(const size_t frame_id);
 
-    void recursive_allocate_nodes_contents(tools::Binary_node<Contents_SCL<B, R>>* node_curr, const int vector_size);
-    void recursive_initialize_frozen_bits(const tools::Binary_node<Contents_SCL<B, R>>* node_curr,
+    void recursive_allocate_nodes_contents(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr, const int vector_size);
+    void recursive_initialize_frozen_bits(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr,
                                           const std::vector<bool>& frozen_bits);
-    void recursive_store(const tools::Binary_node<Contents_SCL<B, R>>* node_curr, B* V_K, int& k) const;
-    void recursive_deallocate_nodes_contents(tools::Binary_node<Contents_SCL<B, R>>* node_curr);
+    void recursive_store(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr, B* V_K, int& k) const;
+    void recursive_deallocate_nodes_contents(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr);
 
-    void apply_f(const tools::Binary_node<Contents_SCL<B, R>>* node_curr);
-    void apply_g(const tools::Binary_node<Contents_SCL<B, R>>* node_curr);
-    void compute_sums(const tools::Binary_node<Contents_SCL<B, R>>* node_curr);
+    void apply_f(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr);
+    void apply_g(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr);
+    void compute_sums(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr);
 };
 }
 }
@@ -115,4 +117,3 @@ class Decoder_polar_PAC_SCL_naive
 #endif
 
 #endif /* DECODER_POLAR_SCL_NAIVE_ */
-
