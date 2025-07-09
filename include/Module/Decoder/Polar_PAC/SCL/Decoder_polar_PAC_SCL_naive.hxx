@@ -1,5 +1,6 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#include <cstdlib>
 #endif
 #include <algorithm>
 #include <cmath>
@@ -78,10 +79,15 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     for (auto& t : this->tasks)
         t->set_replicability(true);
 
-    conv_reg = { 1, 0, 1, 1, 0, 1, 1 };
+    /*conv_reg = { spu::tools::bit_init<B>(), (B)0, spu::tools::bit_init<B>(),*/
+    /*             spu::tools::bit_init<B>(), (B)0, spu::tools::bit_init<B>(),*/
+    /*             spu::tools::bit_init<B>() };*/
+    /**/
+    conv_reg = { (B)1, (B)0, (B)1 };
+    std::cout << "conv_reg[0]: " << conv_reg[0] << "," << spu::tools::bit_init<B>() << std::endl;
 
     for (auto i = 0; i < L; i++)
-        curStates.push_back(std::vector<B>(conv_reg.size() - 1, 0));
+        curStates.push_back(std::vector<B>(conv_reg.size() - 1, (B)0));
 }
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
@@ -192,7 +198,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 auto cur_leaf = leaves_array[path][leaf_index];
                 cur_leaf->get_c()->v[0] = 0;
                 /*std::cout << cur_leaf->get_c()->v.size() << ", " << cur_leaf->get_c()->s.size() << std::endl;*/
-                cur_leaf->get_c()->s[0] = conv1bitEnc(0, path);
+                cur_leaf->get_c()->s[0] = conv1bitEnc((B)0, path);
 
                 auto phi_cur = tools::phi<R>(
                   polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], cur_leaf->get_c()->v[0]);
@@ -212,15 +218,14 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
             for (auto path : active_paths)
             {
                 auto cur_leaf = leaves_array[path][leaf_index];
-                B u0 = conv1bitEnc(0, path);
-                B u1 = conv1bitEnc(spu::tools::bit_init<B>(), path);
+                B u0 = conv1bitEnc((B)0, path);
+                B u1 = conv1bitEnc((B)1, path);
                 R phi0 = tools::phi<B, R>(polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], u0);
                 R phi1 = tools::phi<B, R>(polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], u1);
                 metrics_vec.push_back(std::make_tuple(path, u0, phi0, (B)0));
-                metrics_vec.push_back(std::make_tuple(path, u1, phi1, spu::tools::bit_init<B>()));
+                metrics_vec.push_back(std::make_tuple(path, u1, phi1, (B)1));
                 /*metrics_vec.push_back(std::make_tuple(path, u0, phi0));*/
                 /*metrics_vec.push_back(std::make_tuple(path, u1, phi1));*/
-
 
                 min_phi = std::min<R>(min_phi, phi0);
                 min_phi = std::min<R>(min_phi, phi1);
@@ -353,6 +358,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_store(B* V, bool coded) const
     auto* root = (tools::Binary_node<Contents_PAC_SCL<B, R>>*)this->polar_trees[*active_paths.begin()].get_root();
     if (!coded)
     {
+        std::cout << "coded Inside the store\n";
         auto k = 0;
         this->recursive_store(root, V, k);
     }
@@ -360,6 +366,12 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_store(B* V, bool coded) const
     {
         auto* contents_root = root->get_c();
         std::copy(contents_root->v.begin(), contents_root->v.begin() + this->N, V);
+        /*std::cout << "States: " << std::endl;*/
+        /*for (int i = 0; i < this->conv_reg.size() - 1; i++)*/
+        /*{*/
+        /*    std::cout << this->curStates[0][i] << " , ";*/
+        /*}*/
+        /*std::cout << std::endl;*/
     }
 }
 
@@ -425,23 +437,26 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::duplicate_path(int path, int leaf_index
     path_leaves = leaves_array[path];
 
     newpath_leaves = leaves_array[newpath];
-    for(int i = 0; i < conv_reg.size() - 1; i++)
+    for (int i = 0; i < conv_reg.size() - 1; i++)
         curStates[newpath][i] = curStates[path][i];
 
     for (auto i = 0; i < leaf_index; i++)
+    {
         newpath_leaves[i]->get_c()->s = path_leaves[i]->get_c()->s;
+        newpath_leaves[i]->get_c()->v = path_leaves[i]->get_c()->v;
+    }
 
     recursive_duplicate_tree_sums(leaves_array[path][leaf_index], leaves_array[newpath][leaf_index], nullptr);
 
     if (leaf_index < this->N - 1)
         recursive_duplicate_tree_llr(leaves_array[path][leaf_index + 1], leaves_array[newpath][leaf_index + 1]);
 
-    leaves_array[newpath][leaf_index]->get_c()->s[0] = spu::tools::bit_init<B>();
+    leaves_array[newpath][leaf_index]->get_c()->s[0] = (B)1;
     polar_trees[newpath].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
                                                           leaves_array[path][leaf_index]->get_c()->lambda[0],
-                                                          spu::tools::bit_init<B>()));
+                                                          (B)1));
 
-    leaves_array[path][leaf_index]->get_c()->s[0] = 0;
+    leaves_array[path][leaf_index]->get_c()->s[0] =(B)0;
     polar_trees[path].set_path_metric(
       tools::phi<B, R>(polar_trees[path].get_path_metric(), leaves_array[path][leaf_index]->get_c()->lambda[0], 0));
 }
@@ -509,7 +524,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_store(const tools::Binary_nod
         this->recursive_store(node_curr->get_right(), V_K, k); // recursive call
     }
     else if (!frozen_bits[node_curr->get_lane_id()])
-        V_K[k++] = contents->s[0] ? 1 : 0;
+        V_K[k++] = contents->v[0] ? 1 : 0;
 }
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
@@ -580,17 +595,30 @@ B
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::conv1bitEnc(B cbit, int l)
 {
 
-    B u = cbit & conv_reg[0];
+    B u = (B)cbit & (B)conv_reg[0];
+    /*B u = spu::tools::bop_and((B)conv_reg[0], (B)cbit);*/
+    /*std::cout << "Bit u: " << u << ", conv_reg[0]: " << conv_reg[0] << ", cbit: " << (B)cbit << std::endl;*/
     for (int i = 1; i < conv_reg.size(); i++)
     {
-        if (conv_reg[i] == 1)
+        if (conv_reg[i] == (B)1)
         {
             u = u ^ curStates[l][i - 1];
+            /*u = spu::tools::bop_xor(u, curStates[l][i - 1]);*/
         }
+        /*std::cout << "i: " << i << ", conv_reg[i]: " << conv_reg[i] << ", curStates[l][i-1]: " << curStates[l][i - 1]*/
+        /*          << std::endl;*/
     }
+
     for (int i = curStates.size() - 1; i >= 1; i--)
-        curStates[l][i] = curStates[l][i - 1];
-    curStates[l][0] = cbit;
+        curStates[l][i] = (B)curStates[l][i - 1];
+    curStates[l][0] = (B)cbit;
+
+    /*std::cout << "The current state: \n";*/
+    /*for (int i = 0; i < curStates[l].size(); i++)*/
+    /*{*/
+    /*    std::cout << curStates[l][i] << " ";*/
+    /*}*/
+    /*std::cout << std::endl;*/
 
     return u;
 }
