@@ -10,7 +10,9 @@
 using namespace aff3ct::module;
 
 template<typename B>
-Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits)
+Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
+                                        const int& N,
+                                        const std::vector<bool>& frozen_bits)
   : Encoder<B>(K, N)
   , m((int)std::log2(N))
   , frozen_bits(frozen_bits)
@@ -25,9 +27,11 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::v
     if (this->N != (int)frozen_bits.size())
     {
         std::stringstream message;
-        message << "'frozen_bits.size()' has to be equal to 'N' ('frozen_bits.size()' = " << frozen_bits.size()
-                << ", 'N' = " << N << ").";
-        throw spu::tools::length_error(__FILE__, __LINE__, __func__, message.str());
+        message << "'frozen_bits.size()' has to be equal to 'N' "
+                   "('frozen_bits.size()' = "
+                << frozen_bits.size() << ", 'N' = " << N << ").";
+        throw spu::tools::length_error(
+          __FILE__, __LINE__, __func__, message.str());
     }
 
     this->set_frozen_bits(frozen_bits);
@@ -55,7 +59,7 @@ Encoder_polar_PAC<B>::_encode(const B* U_K, B* X_N, const size_t /*frame_id*/)
     /*{*/
     /*    std::cout << ((frozen_bits[i]) ? (B)0 : i) << ",";*/
     /*}*/
-    std::cout << std::endl;
+    /*std::cout << std::endl;*/
 
     this->convert(U_K, X_N);
     this->convEnc(X_N);
@@ -95,10 +99,18 @@ Encoder_polar_PAC<B>::convEnc(B* X_N)
     std::vector<uint8_t> cState(conv_reg.size() - 1, 0);
     std::vector<uint8_t> u(this->N, 0);
 
+    /*std::cout << "Original: [";*/
     for (int i = 0; i < this->N; ++i)
     {
+        /*std::cout << X_N[i] << ",";*/
         X_N[i] = conv1bitEnc(X_N[i]);
     }
+    /*std::cout << "]" << std::endl << "Encoded: [";*/
+    /*for (int i = 0; i < this->N; i++)*/
+    /*{*/
+    /*    std::cout << X_N[i] << ",";*/
+    /*}*/
+    /*std::cout << "]" << std::endl;*/
 }
 
 template<typename B>
@@ -146,9 +158,11 @@ Encoder_polar_PAC<B>::is_codeword(const B* X_N)
         for (auto j = 0; j < this->N; j += 2 * k)
         {
             for (auto i = 0; i < k; i++)
-                this->X_N_tmp[j + i] = this->X_N_tmp[j + i] ^ this->X_N_tmp[k + j + i];
+                this->X_N_tmp[j + i] =
+                  this->X_N_tmp[j + i] ^ this->X_N_tmp[k + j + i];
 
-            if (this->frozen_bits[j + k - 1] && this->X_N_tmp[j + k - 1]) return false;
+            if (this->frozen_bits[j + k - 1] && this->X_N_tmp[j + k - 1])
+                return false;
         }
 
     return true;
@@ -159,7 +173,8 @@ void
 Encoder_polar_PAC<B>::set_frozen_bits(const std::vector<bool>& frozen_bits)
 {
     aff3ct::tools::fb_assert(frozen_bits, this->K, this->N);
-    std::copy(frozen_bits.begin(), frozen_bits.end(), this->frozen_bits.begin());
+    std::copy(
+      frozen_bits.begin(), frozen_bits.end(), this->frozen_bits.begin());
     auto k = 0;
     for (auto n = 0; n < this->N; n++)
         if (!this->frozen_bits[n]) this->info_bits_pos[k++] = n;
@@ -171,7 +186,8 @@ Encoder_polar_PAC<B>::get_frozen_bits() const
 {
     return this->frozen_bits;
 }
-// ==================================================================================== explicit template instantiation
+// ====================================================================================
+// explicit template instantiation
 #include "Tools/types.h"
 #ifdef AFF3CT_MULTI_PREC
 template class aff3ct::module::Encoder_polar_PAC<B_8>;
@@ -181,4 +197,5 @@ template class aff3ct::module::Encoder_polar_PAC<B_64>;
 #else
 template class aff3ct::module::Encoder_polar_PAC<B>;
 #endif
-// ==================================================================================== explicit template instantiation
+// ====================================================================================
+// explicit template instantiation

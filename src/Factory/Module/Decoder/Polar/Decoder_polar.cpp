@@ -188,7 +188,7 @@ Decoder_polar ::_build(const std::vector<bool>& frozen_bits,
                 return new module::Decoder_polar_SCAN_naive<B, Q, tools::f_LLR<Q>, tools::v_LLR<Q>, tools::h_LLR<B, Q>>(
                   this->K, this->N_cw, this->n_ite, frozen_bits);
             if (this->type == "SCL"){
-                std::cout << "Constructing SCL with naive decoding in: " << __FILE__ << std::endl;
+                /*std::cout << "Constructing SCL with naive decoding in: " << __FILE__ << std::endl;*/
 
                 return new module::Decoder_polar_SCL_naive<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>>(
                         this->K, this->N_cw, this->L, frozen_bits);
@@ -320,7 +320,7 @@ Decoder_polar ::build(const std::vector<bool>& frozen_bits,
             }
             else if (this->simd_strategy.empty())
             {
-                std::cout << "Constructing the SCL FAST decoder without SIMD strategy: " << __FILE__ << std::endl;
+                /*std::cout << "Constructing the SCL FAST decoder without SIMD strategy: " << __FILE__ << std::endl;*/
                 return _build_scl_fast<B, Q, tools::API_polar_dynamic_seq<B, Q>>(frozen_bits, crc, encoder);
             }
         }

@@ -189,7 +189,7 @@ Launcher::launch()
 #ifdef AFF3CT_MPI
         if (this->params_common.mpi_rank == 0)
 #endif
-            /*this->print_header();*/
+            this->print_header();
 
             // print the warnings
 #ifdef AFF3CT_MPI

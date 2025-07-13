@@ -27,11 +27,11 @@ Decoder_polar_SCL_naive<B, R, F, G>::Decoder_polar_SCL_naive(const int& K,
   , L(L)
   , polar_trees(L, tools::Binary_tree_metric<Contents_SCL<B, R>, R>(this->m + 1, metric_init))
 {
-    std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;
+    /*std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;*/
     const std::string name = "Decoder_polar_SCL_naive";
     this->set_name(name);
 
-    std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;
+    /*std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;*/
     if (!spu::tools::is_power_of_2(this->N))
     {
         std::stringstream message;
