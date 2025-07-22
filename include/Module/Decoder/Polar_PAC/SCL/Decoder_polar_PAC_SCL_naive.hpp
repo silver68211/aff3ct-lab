@@ -34,7 +34,8 @@ class Contents_PAC_SCL
       , v(size)
       , is_frozen_bit(0)
     {
-        /*std::cout << "Inside the Contents_PAC_SCL constructor function: " << s.size() << ", " << u.size() << std::endl;*/
+        /*std::cout << "Inside the Contents_PAC_SCL constructor function: " << s.size() << ", " << u.size() <<
+         * std::endl;*/
     }
     virtual ~Contents_PAC_SCL() {}
 };
@@ -91,15 +92,16 @@ class Decoder_polar_PAC_SCL_naive
                                        tools::Binary_node<Contents_PAC_SCL<B, R>>* node_b,
                                        tools::Binary_node<Contents_PAC_SCL<B, R>>* node_caller);
 
-    void duplicate_path(int path, int leaf_index);
+    void duplicate_path(int path, int leaf_index, std::pair<B, std::vector<B>> mkz, std::pair<B, std::vector<B>> mko);
 
-    B conv1bitEnc(B cbit, int l);
+    std::pair<B, std::vector<B>> conv1bitEnc(B cbit, std::vector<B>& state);
     void convEnc(B* X_N);
 
   protected:
     virtual void select_best_path(const size_t frame_id);
 
-    void recursive_allocate_nodes_contents(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr, const int vector_size);
+    void recursive_allocate_nodes_contents(tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr,
+                                           const int vector_size);
     void recursive_initialize_frozen_bits(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr,
                                           const std::vector<bool>& frozen_bits);
     void recursive_store(const tools::Binary_node<Contents_PAC_SCL<B, R>>* node_curr, B* V_K, int& k) const;
