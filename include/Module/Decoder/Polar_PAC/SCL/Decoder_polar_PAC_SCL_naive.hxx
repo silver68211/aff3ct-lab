@@ -87,7 +87,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     /*             spu::tools::bit_init<B>(), (B)0, spu::tools::bit_init<B>(),*/
     /*             spu::tools::bit_init<B>() };*/
     /**/
-    conv_reg = { (B)1, (B)0, (B)1 };
+    conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
     /*std::cout << "conv_reg[0]: " << conv_reg[0] << ","*/
     /*          << spu::tools::bit_init<B>() << std::endl;*/
 
