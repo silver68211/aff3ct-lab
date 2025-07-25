@@ -1,0 +1,417 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/streampu/lib/cpptrace/lib/libcpptrace.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"include",
+			"target_compile_options",
+			"target_compile_definitions",
+			"target_include_directories",
+			"target_compile_features",
+			"target_sources"
+		],
+		"files" : 
+		[
+			"lib/streampu/lib/cpptrace/CMakeLists.txt",
+			"lib/streampu/lib/cpptrace/cmake/InstallRules.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 189,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 561,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 16,
+				"parent" : 3
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 234,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 340,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 538,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 342,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 299,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 254,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 475,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 227,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 274,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 286,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 196,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 203,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++11 -fPIC -fvisibility=hidden -fvisibility-inlines-hidden"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Wextra"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Werror=return-type"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Wundef"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-Wuseless-cast"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 6,
+					"define" : "CPPTRACE_ADDR2LINE_PATH=\"/usr/bin/addr2line\""
+				},
+				{
+					"backtrace" : 7,
+					"define" : "CPPTRACE_DEMANGLE_WITH_CXXABI"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "CPPTRACE_GET_SYMBOLS_WITH_ADDR2LINE"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "CPPTRACE_HAS_CXX_EXCEPTION_TYPE"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "CPPTRACE_STATIC_DEFINE"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "CPPTRACE_UNWIND_WITH_UNWIND"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 12,
+					"isSystem" : true,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/lib/cpptrace/include"
+				},
+				{
+					"backtrace" : 13,
+					"isSystem" : true,
+					"path" : "/media/pac/Data/libraries/aff3ct/Debug/lib/streampu/lib/cpptrace/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					14
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20
+			]
+		}
+	],
+	"id" : "cpptrace-lib::@a7fffb8b0933c727da89",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 4,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "cpptrace-lib",
+	"nameOnDisk" : "libcpptrace.a",
+	"paths" : 
+	{
+		"build" : "lib/streampu/lib/cpptrace",
+		"source" : "lib/streampu/lib/cpptrace"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 15,
+			"path" : "lib/streampu/lib/cpptrace/include/cpptrace/cpptrace.hpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 15,
+			"path" : "lib/streampu/lib/cpptrace/include/ctrace/ctrace.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/cpptrace.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/ctrace.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/demangle/demangle_with_cxxabi.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/demangle/demangle_with_winapi.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/demangle/demangle_with_nothing.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_addr2line.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_dbghelp.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_dl.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_libbacktrace.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_libdwarf.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_with_nothing.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/symbols/symbols_core.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_execinfo.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_libunwind.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_nothing.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_unwind.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_winapi.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/unwind/unwind_with_dbghelp.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 16,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/lib/cpptrace/src/snippets/snippet.cpp",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

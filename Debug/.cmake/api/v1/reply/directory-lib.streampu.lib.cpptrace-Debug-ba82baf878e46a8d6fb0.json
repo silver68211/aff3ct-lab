@@ -1,0 +1,132 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"include"
+		],
+		"files" : 
+		[
+			"lib/streampu/lib/cpptrace/cmake/InstallRules.cmake",
+			"lib/streampu/lib/cpptrace/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 561,
+				"parent" : 0
+			},
+			{
+				"file" : 0,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 5,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 38,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 51,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 58,
+				"parent" : 2
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 3,
+			"component" : "cpptrace-development",
+			"destination" : "include",
+			"paths" : 
+			[
+				{
+					"from" : "lib/streampu/lib/cpptrace/include",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "cpptrace-development",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/streampu/lib/cpptrace/lib/libcpptrace.a"
+			],
+			"targetId" : "cpptrace-lib::@a7fffb8b0933c727da89",
+			"targetIndex" : 31,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "cpptrace-development",
+			"destination" : "lib/cmake/cpptrace",
+			"paths" : 
+			[
+				"Debug/lib/streampu/lib/cpptrace/cmake/cpptrace-config.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "cpptrace-development",
+			"destination" : "lib/cmake/cpptrace",
+			"paths" : 
+			[
+				"Debug/lib/streampu/lib/cpptrace/cpptrace-config-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "cpptrace-development",
+			"destination" : "lib/cmake/cpptrace",
+			"exportName" : "cpptrace-targets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "cpptrace-lib::@a7fffb8b0933c727da89",
+					"index" : 31
+				}
+			],
+			"paths" : 
+			[
+				"lib/streampu/lib/cpptrace/CMakeFiles/Export/feca40dfcffcc17837fe53a02ceb18d3/cpptrace-targets.cmake"
+			],
+			"type" : "export"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "lib/streampu/lib/cpptrace",
+		"source" : "lib/streampu/lib/cpptrace"
+	}
+}

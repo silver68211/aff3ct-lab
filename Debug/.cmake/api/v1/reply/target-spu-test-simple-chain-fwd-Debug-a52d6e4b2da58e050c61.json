@@ -1,0 +1,823 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/streampu/bin/test-simple-chain-fwd"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"target_link_libraries",
+			"spu_target_link_libraries",
+			"set_property",
+			"find_package",
+			"target_compile_definitions",
+			"spu_target_compile_definitions",
+			"target_include_directories",
+			"spu_target_include_directories"
+		],
+		"files" : 
+		[
+			"lib/streampu/CMakeLists.txt",
+			"lib/streampu/lib/cpptrace/CMakeLists.txt",
+			"/usr/share/cmake-3.27/Modules/FindThreads.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 166,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 411,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 2
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 344,
+				"parent" : 4
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 420,
+				"parent" : 0
+			},
+			{
+				"file" : 2,
+				"parent" : 6
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 238,
+				"parent" : 7
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 421,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 393,
+				"parent" : 9
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 304,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 286,
+				"parent" : 11
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 311,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 286,
+				"parent" : 13
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 366,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 352,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 367,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 352,
+				"parent" : 17
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 371,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 352,
+				"parent" : 19
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 380,
+				"parent" : 0
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 352,
+				"parent" : 21
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -std=gnu++11 -fPIE"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-pthread"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_ADDR2LINE_PATH=\"/usr/bin/addr2line\""
+				},
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_DEMANGLE_WITH_CXXABI"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_GET_SYMBOLS_WITH_ADDR2LINE"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_HAS_CXX_EXCEPTION_TYPE"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_STATIC_DEFINE"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "CPPTRACE_UNWIND_WITH_UNWIND"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "SPU_COLORS"
+				},
+				{
+					"backtrace" : 14,
+					"define" : "SPU_STACKTRACE"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 16,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/src"
+				},
+				{
+					"backtrace" : 18,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/include"
+				},
+				{
+					"backtrace" : 20,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/lib/rang/include"
+				},
+				{
+					"backtrace" : 22,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/lib/json/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/media/pac/Data/libraries/aff3ct/lib/streampu/lib/cpptrace/include"
+				},
+				{
+					"backtrace" : 3,
+					"isSystem" : true,
+					"path" : "/media/pac/Data/libraries/aff3ct/Debug/lib/streampu/lib/cpptrace/include"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				70
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"id" : "spu-obj::@c110217abe32dd322bfe"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "cpptrace-lib::@a7fffb8b0933c727da89"
+		}
+	],
+	"id" : "spu-test-simple-chain-fwd::@c110217abe32dd322bfe",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-fPIE -pie",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "lib/cpptrace/lib/libcpptrace.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 8,
+				"fragment" : "-pthread",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "spu-test-simple-chain-fwd",
+	"nameOnDisk" : "test-simple-chain-fwd",
+	"paths" : 
+	{
+		"build" : "lib/streampu",
+		"source" : "lib/streampu"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Object Libraries",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				61,
+				62,
+				63,
+				64,
+				65,
+				66,
+				67,
+				68,
+				69
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				70
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Module.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Adaptor/Adaptor_m_to_n.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Controller/Controller.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Controller/Controller_cyclic/Controller_cyclic.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Controller/Controller_limit/Controller_limit.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Controller/Controller_static/Controller_static.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Delayer/Delayer.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Finalizer/Finalizer.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Incrementer/Incrementer.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Initializer/Initializer.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Iterator/Iterator.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Latency/Probe_latency.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Occurrence/Probe_occurrence.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Probe.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Stream/Probe_stream.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Throughput/Probe_throughput.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Time/Probe_time.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Timestamp/Probe_timestamp.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Probe/Value/Probe_value.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Relayer/Relayer.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Set/Set.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Sink/NO/Sink_NO.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Sink/User/Sink_user_binary.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Sleeper/Sleeper.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Source/AZCW/Source_AZCW.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Source/Random/Source_random.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Source/User/Source_user.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Source/User/Source_user_binary.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Stateful.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateful/Switcher/Switcher.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Module/Stateless/Stateless.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Runtime/Pipeline/Pipeline.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Runtime/Sequence/Sequence.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Runtime/Task/Task.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Scheduler/From_file/Scheduler_from_file.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Scheduler/OTAC/Scheduler_OTAC.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Scheduler/Scheduler.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Builder/Pipeline_builder.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Display/Statistics/Statistics.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Display/Terminal/Dump/Terminal_dump.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Display/Terminal/Standard/Terminal_std.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Display/Terminal/Terminal.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Display/rang_format/rang_format.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/cannot_allocate/cannot_allocate.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/control_flow_error/control_flow_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/domain_error/domain_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/exception.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/invalid_argument/invalid_argument.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/length_error/length_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/logic_error/logic_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/out_of_range/out_of_range.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/overflow_error/overflow_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/processing_aborted/processing_aborted.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/range_error/range_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/runtime_error/runtime_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/underflow_error/underflow_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/unimplemented_error/unimplemented_error.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Exception/waiting_canceled/waiting_canceled.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Help/Help.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Math/utils.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Reporter/Probe/Reporter_probe.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Reporter/Reporter.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Signal_handler/Signal_handler.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/System/memory.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Thread/Thread_pinning/Thread_pinning.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Thread/Thread_pinning/Thread_pinning_utils.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Thread/Thread_pool/Standard/Thread_pool_standard.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/Thread/Thread_pool/Thread_pool.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/compute_bytes.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "Debug/lib/streampu/CMakeFiles/spu-obj.dir/src/Tools/system_functions.cpp.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lib/streampu/tests/bootstrap/simple_chain_fwd.cpp",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "EXECUTABLE"
+}

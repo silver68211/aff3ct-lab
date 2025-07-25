@@ -29,5 +29,6 @@ doc/output/
 scripts/abi/aff3ct_ast.txt
 scripts/abi/db.json
 scripts/abi/db_summary.txt
+testing/
 
 __pycache__/

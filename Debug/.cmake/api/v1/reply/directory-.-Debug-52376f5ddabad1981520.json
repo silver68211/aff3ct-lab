@@ -1,0 +1,115 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 587,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 591,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 702,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 708,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 715,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "simulator",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/aff3ct-3.0.2-149-gf879557"
+			],
+			"targetId" : "aff3ct-bin::@6890427a1f51a3e7e1df",
+			"targetIndex" : 28,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "simulator",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"Debug/bin/aff3ct"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "documentation",
+			"destination" : "share/aff3ct-3.0.2-149-gf879557/doc/strings",
+			"paths" : 
+			[
+				"doc/strings.rst"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "configuration",
+			"destination" : "share/aff3ct-3.0.2-149-gf879557/conf",
+			"paths" : 
+			[
+				{
+					"from" : "conf",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "references",
+			"destination" : "share/aff3ct-3.0.2-149-gf879557/refs",
+			"paths" : 
+			[
+				{
+					"from" : "refs",
+					"to" : "."
+				}
+			],
+			"type" : "directory"
+		}
+	],
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	}
+}
