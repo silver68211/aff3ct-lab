@@ -1,6 +1,7 @@
 *.gitignore*
 
 .cproject
+.cache
 .project
 .pydevproject
 .settings
@@ -16,6 +17,7 @@ CMakeSettings.json
 
 .scannerwork/
 build*/
+Debug*/
 cmake-build*/
 cppcheck/
 src/Tools/version.cpp
