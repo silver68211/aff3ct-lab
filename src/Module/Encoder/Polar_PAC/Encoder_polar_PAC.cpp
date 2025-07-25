@@ -10,9 +10,7 @@
 using namespace aff3ct::module;
 
 template<typename B>
-Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
-                                        const int& N,
-                                        const std::vector<bool>& frozen_bits)
+Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits)
   : Encoder<B>(K, N)
   , m((int)std::log2(N))
   , frozen_bits(frozen_bits)
@@ -30,8 +28,7 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
         message << "'frozen_bits.size()' has to be equal to 'N' "
                    "('frozen_bits.size()' = "
                 << frozen_bits.size() << ", 'N' = " << N << ").";
-        throw spu::tools::length_error(
-          __FILE__, __LINE__, __func__, message.str());
+        throw spu::tools::length_error(__FILE__, __LINE__, __func__, message.str());
     }
 
     this->set_frozen_bits(frozen_bits);
@@ -158,11 +155,9 @@ Encoder_polar_PAC<B>::is_codeword(const B* X_N)
         for (auto j = 0; j < this->N; j += 2 * k)
         {
             for (auto i = 0; i < k; i++)
-                this->X_N_tmp[j + i] =
-                  this->X_N_tmp[j + i] ^ this->X_N_tmp[k + j + i];
+                this->X_N_tmp[j + i] = this->X_N_tmp[j + i] ^ this->X_N_tmp[k + j + i];
 
-            if (this->frozen_bits[j + k - 1] && this->X_N_tmp[j + k - 1])
-                return false;
+            if (this->frozen_bits[j + k - 1] && this->X_N_tmp[j + k - 1]) return false;
         }
 
     return true;
@@ -173,8 +168,7 @@ void
 Encoder_polar_PAC<B>::set_frozen_bits(const std::vector<bool>& frozen_bits)
 {
     aff3ct::tools::fb_assert(frozen_bits, this->K, this->N);
-    std::copy(
-      frozen_bits.begin(), frozen_bits.end(), this->frozen_bits.begin());
+    std::copy(frozen_bits.begin(), frozen_bits.end(), this->frozen_bits.begin());
     auto k = 0;
     for (auto n = 0; n < this->N; n++)
         if (!this->frozen_bits[n]) this->info_bits_pos[k++] = n;
