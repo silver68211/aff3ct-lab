@@ -535,7 +535,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::duplicate_path(int path,
     leaves_array[newpath][leaf_index]->get_c()->v[0] = 1;
     polar_trees[newpath].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
                                                           leaves_array[path][leaf_index]->get_c()->lambda[0],
-                                                          leaves_array[path][leaf_index]->get_c()->s[0]));
+                                                          leaves_array[newpath][leaf_index]->get_c()->s[0]));
 
     curStates[path] = mkz.second;
     leaves_array[path][leaf_index]->get_c()->s[0] = mkz.first;
@@ -612,7 +612,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_store(const tools::Binary_nod
         this->recursive_store(node_curr->get_right(), V_K, k); // recursive call
     }
     else if (!frozen_bits[node_curr->get_lane_id()])
-        V_K[k++] = contents->s[0] ? 1 : 0;
+        V_K[k++] = contents->v[0] ? 1 : 0;
 }
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
