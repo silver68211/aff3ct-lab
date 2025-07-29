@@ -179,7 +179,6 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_load(const R* Y_N)
         auto* contents = this->polar_trees[path].get_root()->get_contents();
         for (auto i = 0; i < this->N; i++)
             contents->lambda[i] = Y_N[i];
-
         polar_trees[path].set_path_metric(metric_init);
     }
 
