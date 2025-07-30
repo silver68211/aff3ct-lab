@@ -208,8 +208,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
     // run through each leaf
     for (auto leaf_index = 0; leaf_index < this->N; leaf_index++)
     {
-        // std::cout << "The compute depth: " << tools::compute_depth(leaf_index, this->m) << "," << leaf_index << ","
-        // << this->m << std::endl;
+        std::cout << "The compute depth: " << tools::compute_depth(leaf_index, this->m) << "," << leaf_index << ","
+                  << this->m << std::endl;
         // compute LLR for current leaf
         for (auto path : active_paths)
             this->recursive_compute_llr(leaves_array[path][leaf_index], tools::compute_depth(leaf_index, this->m));
@@ -247,7 +247,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
             mkz.clear();
             mko.clear();
 
-            std::vector<int16_t> path_list_index(this->L, 0);
+            // std::vector<int16_t> path_list_index(this->L, 0);
             auto min_phi = std::numeric_limits<R>::max();
             int16_t ci = 0;
             for (auto path : active_paths)
@@ -258,12 +258,12 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 // mkz.push_back(conv1bitEnc((B)0, curStates[path]));
                 // mko.push_back(conv1bitEnc((B)1, curStates[path]));
 
-                mkz.push_back(u0Pair);
-                mko.push_back(u1Pair);
-                B u0 = mkz[ci].first;
-                B u1 = mko[ci].first;
-                // B u0 = u0Pair.first;
-                // B u1 = u1Pair.first;
+                // mkz.push_back(u0Pair);
+                // mko.push_back(u1Pair);
+                // B u0 = mkz[ci].first;
+                // B u1 = mko[ci].first;
+                B u0 = u0Pair.first;
+                B u1 = u1Pair.first;
                 ConvType curConv = std::make_tuple(u0Pair, u1Pair);
 
                 R phi0 = tools::phi<B, R>(polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], u0);
@@ -272,7 +272,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 metrics_vec.push_back(std::make_tuple(path, u1, phi1, (B)1, ci, curConv));
                 /*metrics_vec.push_back(std::make_tuple(path, u0, phi0));*/
                 /*metrics_vec.push_back(std::make_tuple(path, u1, phi1));*/
-                path_list_index[path] = ci;
+                // path_list_index[path] = ci;
 
                 min_phi = std::min<R>(min_phi, phi0);
                 min_phi = std::min<R>(min_phi, phi1);
@@ -288,7 +288,16 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
             {
                 last_active_paths = active_paths;
                 for (auto path : last_active_paths)
-                    this->duplicate_path(path, leaf_index, mkz[path_list_index[path]], mko[path_list_index[path]]);
+                {
+                    auto cur_it = std::find_if(metrics_vec.begin(),
+                                               metrics_vec.end(),
+                                               [path](std::tuple<int, B, R, B, int, ConvType> x)
+                                               { return std::get<0>(x) == path; });
+                    if (cur_it != metrics_vec.end())
+                        this->duplicate_path(
+                          path, leaf_index, std::get<0>(std::get<5>(*cur_it)), std::get<1>(std::get<5>(*cur_it)));
+                    // this->duplicate_path(path, leaf_index, mkz[path_list_index[path]], mko[path_list_index[path]]);
+                }
             }
             else
             {
