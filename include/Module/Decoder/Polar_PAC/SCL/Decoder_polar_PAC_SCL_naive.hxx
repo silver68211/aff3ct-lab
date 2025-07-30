@@ -202,7 +202,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
 
     std::vector<std::pair<B, std::vector<B>>> mko;
     std::vector<std::pair<B, std::vector<B>>> mkz;
-    std::vector<int16_t> path_list_index(this->L, 0);
+    // std::vector<int16_t> path_list_index(this->L, 0);
     // std::cout << "The value of m: " << this->m << std::endl;
 
     // run through each leaf
@@ -244,6 +244,10 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
         {
             // metrics vec used to store values of hypothetic path metrics
             metrics_vec.clear();
+            mkz.clear();
+            mko.clear();
+
+            std::vector<int16_t> path_list_index(this->L, 0);
             auto min_phi = std::numeric_limits<R>::max();
             int16_t ci = 0;
             for (auto path : active_paths)
@@ -323,17 +327,20 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     {
                         // duplicate
                         metrics_vec.erase(it_double);
-                        // duplicate_path(std::get<0>(*it), leaf_index, mkz[std::get<0>(*it)], mko[std::get<0>(*it)]);
-                        duplicate_path(
-                          std::get<0>(*it), leaf_index, std::get<0>(std::get<5>(*it)), std::get<1>(std::get<5>(*it)));
+                        duplicate_path(std::get<0>(*it), leaf_index, mkz[std::get<0>(*it)], mko[std::get<0>(*it)]);
+                        // duplicate_path(
+                        //   std::get<0>(*it), leaf_index, std::get<0>(std::get<5>(*it)),
+                        //   std::get<1>(std::get<5>(*it)));
                     }
                     else
                     {
-                        if (std::get<3>(*it) == (B)0)
-                            curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
-
-                        if (std::get<3>(*it) == (B)1)
-                            curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
+                        // if (std::get<3>(*it) == (B)0)
+                        //     curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
+                        //
+                        // if (std::get<3>(*it) == (B)1)
+                        //     curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
+                        if (std::get<3>(*it) == (B)0) curStates[std::get<0>(*it)] = mkz[std::get<0>(*it)].second;
+                        if (std::get<3>(*it) == (B)1) curStates[std::get<0>(*it)] = mko[std::get<0>(*it)].second;
 
                         // choose
                         leaves_array[std::get<0>(*it)][leaf_index]->get_c()->s[0] = std::get<1>(*it);
