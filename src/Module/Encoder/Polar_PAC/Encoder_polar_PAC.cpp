@@ -34,6 +34,7 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::v
     this->set_frozen_bits(frozen_bits);
 
     conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
+    // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
     curState.resize(conv_reg.size() - 1);
 }
 
@@ -72,7 +73,7 @@ B
 Encoder_polar_PAC<B>::conv1bitEnc(B cbit)
 {
 
-    B u = cbit & conv_reg[0];
+    B u = cbit && conv_reg[0];
     for (int i = 1; i < conv_reg.size(); i++)
     {
         if (conv_reg[i] == 1)

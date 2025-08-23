@@ -1,5 +1,7 @@
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
+#include "Module/Decoder/Decoder.hpp"
+#include <chrono>
 #include <cinttypes>
 #include <cstdlib>
 #include <pthread.h>
@@ -88,6 +90,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     /*             spu::tools::bit_init<B>() };*/
     /**/
     conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
+    // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
     /*std::cout << "conv_reg[0]: " << conv_reg[0] << ","*/
     /*          << spu::tools::bit_init<B>() << std::endl;*/
 
@@ -377,11 +380,13 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode_siho(const R* Y_N, B* V_K, cons
     this->_load(Y_N);
     //	auto d_load = std::chrono::steady_clock::now() - t_load;
 
-    //	auto t_decod = std::chrono::steady_clock::now(); //
+    // auto t_decod = std::chrono::steady_clock::now(); //
     //--------------------------------------------------------
     // DECODE
     this->_decode(frame_id);
-    //	auto d_decod = std::chrono::steady_clock::now() - t_decod;
+    // auto d_decod = std::chrono::steady_clock::now() - t_decod;
+    // auto rvalue = std::chrono::duration_cast<std::chrono::milliseconds>(d_decod).count();
+    // std::cout << "The time taken: " << rvalue << std::endl;
 
     //	auto t_store = std::chrono::steady_clock::now(); //
     //---------------------------------------------------------
@@ -391,8 +396,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode_siho(const R* Y_N, B* V_K, cons
 
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::load,
     // d_load);
-    //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::decode,
-    // d_decod);
+    // std::cout << "dec::tm:decode_siho::decode = " << (size_t)dec::tm::decode_siho::decode << std::endl;
+    // (*this)[dec::tsk::decode_siho].update_timer((size_t)dec::tm::decode_siho::decode, d_decod);
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::store,
     // d_store);
 
@@ -698,7 +703,7 @@ std::pair<B, std::vector<B>>
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::conv1bitEnc(B cbit, std::vector<B>& state)
 {
 
-    B u = (B)cbit & (B)conv_reg[0];
+    B u = (B)cbit && (B)conv_reg[0];
     /*B u = spu::tools::bop_and((B)conv_reg[0], (B)cbit);*/
     /*std::cout << "Bit u: " << u << ", conv_reg[0]: " << conv_reg[0] << ",
      * cbit: " << (B)cbit << std::endl;*/

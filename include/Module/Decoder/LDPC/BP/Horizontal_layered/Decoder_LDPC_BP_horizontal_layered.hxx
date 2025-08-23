@@ -98,11 +98,11 @@ Decoder_LDPC_BP_horizontal_layered<B, R, Update_rule>::_decode_siho(const R* Y_N
     this->_load(Y_N, frame_id);
     //	auto d_load = std::chrono::steady_clock::now() - t_load;
 
-    //	auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
+    auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
     // DECODE
     // actual decoding
     auto status = this->_decode(frame_id);
-    //	auto d_decod = std::chrono::steady_clock::now() - t_decod;
+    auto d_decod = std::chrono::steady_clock::now() - t_decod;
 
     //	auto t_store = std::chrono::steady_clock::now(); // ---------------------------------------------------------
     // STORE
@@ -115,7 +115,7 @@ Decoder_LDPC_BP_horizontal_layered<B, R, Update_rule>::_decode_siho(const R* Y_N
     //	auto d_store = std::chrono::steady_clock::now() - t_store;
 
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::load,   d_load);
-    //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::decode, d_decod);
+    (*this)[dec::tsk::decode_siho].update_timer((size_t)dec::tm::decode_siho::decode, d_decod);
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::store,  d_store);
 
     CWD[0] = !status;
