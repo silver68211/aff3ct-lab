@@ -134,10 +134,10 @@ Decoder_polar_SC_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, const 
     this->_load(Y_N);
     //	auto d_load = std::chrono::steady_clock::now() - t_load;
 
-    //	auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
+    auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
     // DECODE
     this->recursive_decode(this->polar_tree.get_root());
-    //	auto d_decod = std::chrono::steady_clock::now() - t_decod;
+    auto d_decod = std::chrono::steady_clock::now() - t_decod;
 
     //	auto t_store = std::chrono::steady_clock::now(); // ---------------------------------------------------------
     // STORE
@@ -145,7 +145,7 @@ Decoder_polar_SC_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, const 
     //	auto d_store = std::chrono::steady_clock::now() - t_store;
 
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::load,   d_load);
-    //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::decode, d_decod);
+    (*this)[dec::tsk::decode_siho].update_timer((size_t)dec::tm::decode_siho::decode, d_decod);
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::store,  d_store);
 
     return 0;
