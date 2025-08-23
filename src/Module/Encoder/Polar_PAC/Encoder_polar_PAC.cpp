@@ -33,6 +33,8 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::v
 
     this->set_frozen_bits(frozen_bits);
 
+    // conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
+
     conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
     curState.resize(conv_reg.size() - 1);
 }

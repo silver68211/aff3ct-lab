@@ -208,8 +208,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
     // run through each leaf
     for (auto leaf_index = 0; leaf_index < this->N; leaf_index++)
     {
-        std::cout << "The compute depth: " << tools::compute_depth(leaf_index, this->m) << "," << leaf_index << ","
-                  << this->m << std::endl;
+        // std::cout << "The compute depth: " << tools::compute_depth(leaf_index, this->m) << "," << leaf_index << ","
+        //           << this->m << std::endl;
         // compute LLR for current leaf
         for (auto path : active_paths)
             this->recursive_compute_llr(leaves_array[path][leaf_index], tools::compute_depth(leaf_index, this->m));
@@ -226,7 +226,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                  * cur_leaf->get_c()->s.size() << std::endl;*/
                 std::pair<B, std::vector<B>> res = conv1bitEnc((B)0, curStates[path]);
 
-                cur_leaf->get_c()->s[0] = res.first;
+                cur_leaf->get_c()->s[0] = res.first ? spu::tools::bit_init<B>() : 0;
                 curStates[path] = res.second;
 
                 auto phi_cur = tools::phi<R>(
@@ -244,9 +244,9 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
         {
             // metrics vec used to store values of hypothetic path metrics
             metrics_vec.clear();
-            mkz.clear();
-            mko.clear();
-
+            // mkz.clear();
+            // mko.clear();
+            //
             // std::vector<int16_t> path_list_index(this->L, 0);
             auto min_phi = std::numeric_limits<R>::max();
             int16_t ci = 0;
@@ -262,8 +262,8 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                 // mko.push_back(u1Pair);
                 // B u0 = mkz[ci].first;
                 // B u1 = mko[ci].first;
-                B u0 = u0Pair.first;
-                B u1 = u1Pair.first;
+                B u0 = u0Pair.first ? spu::tools::bit_init<B>() : 0;
+                B u1 = u1Pair.first ? spu::tools::bit_init<B>() : 0;
                 ConvType curConv = std::make_tuple(u0Pair, u1Pair);
 
                 R phi0 = tools::phi<B, R>(polar_trees[path].get_path_metric(), cur_leaf->get_c()->lambda[0], u0);
@@ -336,20 +336,19 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     {
                         // duplicate
                         metrics_vec.erase(it_double);
-                        duplicate_path(std::get<0>(*it), leaf_index, mkz[std::get<0>(*it)], mko[std::get<0>(*it)]);
-                        // duplicate_path(
-                        //   std::get<0>(*it), leaf_index, std::get<0>(std::get<5>(*it)),
-                        //   std::get<1>(std::get<5>(*it)));
+                        // duplicate_path(std::get<0>(*it), leaf_index, mkz[std::get<0>(*it)], mko[std::get<0>(*it)]);
+                        duplicate_path(
+                          std::get<0>(*it), leaf_index, std::get<0>(std::get<5>(*it)), std::get<1>(std::get<5>(*it)));
                     }
                     else
                     {
-                        // if (std::get<3>(*it) == (B)0)
-                        //     curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
-                        //
-                        // if (std::get<3>(*it) == (B)1)
-                        //     curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
-                        if (std::get<3>(*it) == (B)0) curStates[std::get<0>(*it)] = mkz[std::get<0>(*it)].second;
-                        if (std::get<3>(*it) == (B)1) curStates[std::get<0>(*it)] = mko[std::get<0>(*it)].second;
+                        if (std::get<3>(*it) == (B)0)
+                            curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
+
+                        if (std::get<3>(*it) == (B)1)
+                            curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
+                        // if (std::get<3>(*it) == (B)0) curStates[std::get<0>(*it)] = mkz[std::get<0>(*it)].second;
+                        // if (std::get<3>(*it) == (B)1) curStates[std::get<0>(*it)] = mko[std::get<0>(*it)].second;
 
                         // choose
                         leaves_array[std::get<0>(*it)][leaf_index]->get_c()->s[0] = std::get<1>(*it);
@@ -547,14 +546,14 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::duplicate_path(int path,
         recursive_duplicate_tree_llr(leaves_array[path][leaf_index + 1], leaves_array[newpath][leaf_index + 1]);
 
     curStates[newpath] = mko.second;
-    leaves_array[newpath][leaf_index]->get_c()->s[0] = mko.first;
+    leaves_array[newpath][leaf_index]->get_c()->s[0] = mko.first ? spu::tools::bit_init<B>() : 0;
     leaves_array[newpath][leaf_index]->get_c()->v[0] = 1;
     polar_trees[newpath].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
                                                           leaves_array[path][leaf_index]->get_c()->lambda[0],
                                                           leaves_array[newpath][leaf_index]->get_c()->s[0]));
 
     curStates[path] = mkz.second;
-    leaves_array[path][leaf_index]->get_c()->s[0] = mkz.first;
+    leaves_array[path][leaf_index]->get_c()->s[0] = mkz.first ? spu::tools::bit_init<B>() : 0;
     leaves_array[path][leaf_index]->get_c()->v[0] = 0;
     polar_trees[path].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
                                                        leaves_array[path][leaf_index]->get_c()->lambda[0],
