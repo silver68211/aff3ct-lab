@@ -37,7 +37,7 @@ class Codec_SIHO : public Codec_HIHO
 
     // builder
     template<typename B = int, typename Q = float>
-    tools::Codec_SIHO<B, Q>* build(const module::CRC<B>* crc = nullptr) const;
+    tools::Codec_SIHO<B, Q>* build(const module::CRC<B>* crc = nullptr, const std::vector<uint8_t>& conv = {}) const;
 
   protected:
     Codec_SIHO(const std::string& n, const std::string& p);

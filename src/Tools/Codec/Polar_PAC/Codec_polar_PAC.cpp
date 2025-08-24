@@ -6,8 +6,8 @@
 #include "Factory/Module/Encoder/Encoder.hpp"
 #include "Factory/Module/Puncturer/Puncturer.hpp"
 #include "Module/Extractor/Polar/Extractor_polar.hpp"
-#include "Tools/Codec/Polar_PAC/Codec_polar_PAC.hpp"
 #include "Tools/Codec/Polar/Codec_polar.hpp"
+#include "Tools/Codec/Polar_PAC/Codec_polar_PAC.hpp"
 #include "Tools/Noise/Event_probability.hpp"
 #include "Tools/Noise/Noise.hpp"
 #include "Tools/Noise/Sigma.hpp"
@@ -20,7 +20,8 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
                                        const factory::Encoder_polar_PAC& enc_params,
                                        const factory::Decoder_polar_PAC& dec_params,
                                        const factory::Puncturer_polar* pct_params,
-                                       const module::CRC<B>* crc)
+                                       const module::CRC<B>* crc,
+                                       const std::vector<uint8_t>& conv)
   : Codec_SISO<B, Q>(enc_params.K, enc_params.N_cw, pct_params ? pct_params->N : enc_params.N_cw)
   , adaptive_fb(fb_params.noise == -1.f)
   , frozen_bits(new std::vector<bool>(fb_params.N_cw, true))
@@ -86,7 +87,7 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
 
     try
     {
-        this->set_encoder(enc_params.build<B>(*frozen_bits));
+        this->set_encoder(enc_params.build<B>(*frozen_bits, conv));
         fb_encoder = dynamic_cast<Interface_get_set_frozen_bits*>(&this->get_encoder());
     }
     catch (spu::tools::cannot_allocate const&)
@@ -98,14 +99,14 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
     try
     {
         /*this->set_decoder_siso(dec_params.build_siso<B, Q>(*frozen_bits, &this->get_encoder()));*/
-        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
+        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder(), conv));
     }
     catch (const std::exception&)
     {
         /*if (generated_decoder)*/
         /*    this->set_decoder_siho(dec_params.build_gen<B, Q>(crc, &this->get_encoder()));*/
         /*else*/
-        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
+        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder(), conv));
     }
     /*std::cout << "Done constructing the decoder" << __FILE__ << std::endl;*/
 
@@ -267,4 +268,3 @@ template class aff3ct::tools::Codec_polar_PAC<B_64, Q_64>;
 template class aff3ct::tools::Codec_polar_PAC<B, Q>;
 #endif
 // ==================================================================================== explicit template instantiation
-

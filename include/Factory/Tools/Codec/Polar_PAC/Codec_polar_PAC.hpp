@@ -46,10 +46,10 @@ class Codec_polar_PAC : public Codec_SISO
 
     // builder
     template<typename B = int, typename Q = float>
-    tools::Codec_polar_PAC<B, Q>* build(const module::CRC<B>* crc = nullptr) const;
+    tools::Codec_polar_PAC<B, Q>* build(const module::CRC<B>* crc = nullptr,
+                                        const std::vector<uint8_t>& conv = {}) const;
 };
 }
 }
 
 #endif /* FACTORY_CODEC_POLAR_PAC_HPP */
-

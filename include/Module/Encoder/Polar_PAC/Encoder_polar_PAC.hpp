@@ -23,11 +23,14 @@ class Encoder_polar_PAC
     const int m;                   // log_2 of code length
     std::vector<bool> frozen_bits; // true means frozen, false means set to 0/1
     std::vector<B> X_N_tmp;
-    std::vector<B> conv_reg;
+    std::vector<uint8_t> conv_reg;
     std::vector<B> curState;
 
   public:
-    Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits);
+    Encoder_polar_PAC(const int& K,
+                      const int& N,
+                      const std::vector<bool>& frozen_bits,
+                      const std::vector<uint8_t>& conv);
     virtual ~Encoder_polar_PAC() = default;
 
     virtual Encoder_polar_PAC<B>* clone() const;
@@ -50,4 +53,3 @@ class Encoder_polar_PAC
 }
 
 #endif // ENCODER_POLAR_PAC_HPP_
-

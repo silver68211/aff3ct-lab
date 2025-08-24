@@ -53,7 +53,8 @@ class Decoder_polar_PAC : public Decoder
     template<typename B = int, typename Q = float>
     module::Decoder_SIHO<B, Q>* build(const std::vector<bool>& frozen_bits,
                                       const module::CRC<B>* crc = nullptr,
-                                      module::Encoder<B>* encoder = nullptr) const;
+                                      module::Encoder<B>* encoder = nullptr,
+                                      const std::vector<uint8_t>& conv = {}) const;
 
     /*template<typename B = int, typename Q = float>*/
     /*module::Decoder_SIHO<B, Q>* build_gen(const module::CRC<B>* crc = nullptr,*/
@@ -65,7 +66,8 @@ class Decoder_polar_PAC : public Decoder
     template<typename B = int, typename Q = float, class API_polar>
     module::Decoder_SIHO<B, Q>* _build(const std::vector<bool>& frozen_bits,
                                        const module::CRC<B>* crc = nullptr,
-                                       module::Encoder<B>* encoder = nullptr) const;
+                                       module::Encoder<B>* encoder = nullptr,
+                                       const std::vector<uint8_t>& conv = {}) const;
 
     /*template<typename B = int, typename Q = float, class API_polar>*/
     /*module::Decoder_SIHO<B, Q>* _build_scl_fast(const std::vector<bool>& frozen_bits,*/
@@ -83,4 +85,3 @@ class Decoder_polar_PAC : public Decoder
 }
 
 #endif /* FACTORY_DECODER_POLAR_PAC_HPP */
-

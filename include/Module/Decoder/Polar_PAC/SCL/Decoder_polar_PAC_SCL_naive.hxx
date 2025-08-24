@@ -3,6 +3,7 @@
 #include "Module/Decoder/Decoder.hpp"
 #include <chrono>
 #include <cinttypes>
+#include <cstdio>
 #include <cstdlib>
 #include <pthread.h>
 #endif
@@ -24,13 +25,15 @@ template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G>
 Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& K,
                                                                      const int& N,
                                                                      const int& L,
-                                                                     const std::vector<bool>& frozen_bits)
+                                                                     const std::vector<bool>& frozen_bits,
+                                                                     const std::vector<uint8_t>& conv)
   : Decoder_SIHO<B, R>(K, N)
   , m((int)std::log2(N))
   , metric_init(std::numeric_limits<R>::min())
   , frozen_bits(frozen_bits)
   , L(L)
   , polar_trees(L, tools::Binary_tree_metric<Contents_PAC_SCL<B, R>, R>(this->m + 1, metric_init))
+  , conv_reg(conv)
 {
     /*std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;*/
     const std::string name = "Decoder_polar_PAC_SCL_naive";
@@ -89,7 +92,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     /*             spu::tools::bit_init<B>(), (B)0, spu::tools::bit_init<B>(),*/
     /*             spu::tools::bit_init<B>() };*/
     /**/
-    conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
+    // conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
     // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
     /*std::cout << "conv_reg[0]: " << conv_reg[0] << ","*/
     /*          << spu::tools::bit_init<B>() << std::endl;*/
@@ -217,6 +220,10 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
         for (auto path : active_paths)
             this->recursive_compute_llr(leaves_array[path][leaf_index], tools::compute_depth(leaf_index, this->m));
 
+        // for (auto aupp : curStates[0])
+        //     std::cout << aupp << ",";
+        // std::cout << std::endl;
+        //
         // if current leaf is a frozen bit
         if (leaves_array[0][leaf_index]->get_c()->is_frozen_bit)
         {
@@ -399,6 +406,12 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode_siho(const R* Y_N, B* V_K, cons
     // (*this)[dec::tsk::decode_siho].update_timer((size_t)dec::tm::decode_siho::decode, d_decod);
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::store,
     // d_store);
+    //
+    // for (int i = 0; i < this->K; i++)
+    // {
+    //     std::cout << V_K[i] << ",";
+    // }
+    // std::cout << std::endl;
 
     return 0;
 }
@@ -510,7 +523,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::recursive_duplicate_tree_sums(
     if (node_a->get_left() != node_caller && !node_a->is_leaf())
     {
         node_b->get_left()->get_c()->s = node_a->get_left()->get_c()->s;
-        node_b->get_left()->get_c()->v = node_a->get_left()->get_c()->v;
+        // node_b->get_left()->get_c()->v = node_a->get_left()->get_c()->v;
     }
 
     if (!node_a->is_root()) this->recursive_duplicate_tree_sums(node_a->get_father(), node_b->get_father(), node_a);

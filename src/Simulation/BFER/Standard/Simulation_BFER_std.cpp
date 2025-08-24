@@ -53,7 +53,7 @@ Simulation_BFER_std<B, R, Q>::build_crc()
 
 template<typename B, typename R, typename Q>
 std::unique_ptr<tools::Codec_SIHO<B, Q>>
-Simulation_BFER_std<B, R, Q>::build_codec(const module::CRC<B>* crc)
+Simulation_BFER_std<B, R, Q>::build_codec(const module::CRC<B>* crc, const std::vector<uint8_t>& conv)
 {
     /*std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;*/
     std::unique_ptr<factory::Codec> params_cdc(params_BFER_std.cdc->clone());
@@ -62,7 +62,7 @@ Simulation_BFER_std<B, R, Q>::build_codec(const module::CRC<B>* crc)
     /*std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;*/
     auto param_siho = dynamic_cast<factory::Codec_SIHO*>(params_cdc.get());
     /*std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;*/
-    auto cdc = std::unique_ptr<tools::Codec_SIHO<B, Q>>(param_siho->build<B, Q>(crc_ptr));
+    auto cdc = std::unique_ptr<tools::Codec_SIHO<B, Q>>(param_siho->build<B, Q>(crc_ptr, conv));
     /*std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;*/
     cdc->set_n_frames(this->params.n_frames);
     /*std::cout << "In the " << __LINE__ << "," << __func__ << "," << __FILE__ << std::endl;*/
@@ -143,6 +143,7 @@ Simulation_BFER_std<B, R, Q>::create_modules()
 {
     Simulation_BFER<B, R>::create_modules();
 
+    std::vector<uint8_t> conv = { 1, 0, 1, 1, 0, 1, 1 };
     /*std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;*/
     this->source = this->build_source();
     /*std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;*/
@@ -150,7 +151,7 @@ Simulation_BFER_std<B, R, Q>::create_modules()
     /*std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;*/
     /*auto crcPtr = this->params_BFER_std.crc->type == "NO" ? nullptr : this->crc.get();*/
     /*auto crcPtr = this->params_BFER_std.crc->type == "NO" ? nullptr : this->crc.get();*/
-    this->codec = this->build_codec(this->crc.get());
+    this->codec = this->build_codec(this->crc.get(), conv);
     /*this->codec = this->build_codec(crcPtr);*/
     /*std::cout << "In the " << __FILE__ << "," << __func__ << std::endl;*/
     this->modem = this->build_modem(this->distributions.get(), this->constellation.get());
@@ -666,7 +667,7 @@ Simulation_BFER_std<B, R, Q>::create_sequence()
             this->dumper[tid]->register_data(channel.get_noised_data(),
                                              this->params_BFER_std.err_track_threshold,
                                              "chn",
-                                             true,
+                                             false,
                                              this->params_BFER_std.n_frames,
                                              {});
         }

@@ -58,13 +58,17 @@ class Decoder_polar_PAC_SCL_naive
     std::set<int> active_paths;
 
     std::vector<std::vector<B>> curStates;
-    std::vector<B> conv_reg;
+    std::vector<uint8_t> conv_reg;
 
     std::vector<tools::Binary_tree_metric<Contents_PAC_SCL<B, R>, R>> polar_trees;
     std::vector<std::vector<tools::Binary_node<Contents_PAC_SCL<B, R>>*>> leaves_array;
 
   public:
-    Decoder_polar_PAC_SCL_naive(const int& K, const int& N, const int& L, const std::vector<bool>& frozen_bits);
+    Decoder_polar_PAC_SCL_naive(const int& K,
+                                const int& N,
+                                const int& L,
+                                const std::vector<bool>& frozen_bits,
+                                const std::vector<uint8_t>& conv);
     virtual ~Decoder_polar_PAC_SCL_naive();
 
     virtual Decoder_polar_PAC_SCL_naive<B, R, F, G>* clone() const;

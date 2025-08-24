@@ -167,30 +167,34 @@ Codec_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& headers
 
 template<typename B, typename Q>
 tools::Codec_polar_PAC<B, Q>*
-Codec_polar_PAC ::build(const module::CRC<B>* crc) const
+Codec_polar_PAC ::build(const module::CRC<B>* crc, const std::vector<uint8_t>& conv) const
 {
     /*std::cout << "Inside the: " << __func__ << std::endl;*/
     return new tools::Codec_polar_PAC<B, Q>(*fbg,
                                             dynamic_cast<const Encoder_polar_PAC&>(*enc),
                                             dynamic_cast<const Decoder_polar_PAC&>(*dec),
                                             dynamic_cast<const Puncturer_polar*>(pct.get()),
-                                            crc);
+                                            crc,
+                                            conv);
 }
 
 // ==================================================================================== explicit template instantiation
 #include "Tools/types.h"
 #ifdef AFF3CT_MULTI_PREC
 template aff3ct::tools::Codec_polar_PAC<B_8, Q_8>*
-aff3ct::factory::Codec_polar_PAC::build<B_8, Q_8>(const aff3ct::module::CRC<B_8>*) const;
+aff3ct::factory::Codec_polar_PAC::build<B_8, Q_8>(const aff3ct::module::CRC<B_8>*,
+                                                  const std::vector<uint8_t>& conv) const;
 template aff3ct::tools::Codec_polar_PAC<B_16, Q_16>*
-aff3ct::factory::Codec_polar_PAC::build<B_16, Q_16>(const aff3ct::module::CRC<B_16>*) const;
+aff3ct::factory::Codec_polar_PAC::build<B_16, Q_16>(const aff3ct::module::CRC<B_16>*,
+                                                    const std::vector<uint8_t>& conv) const;
 template aff3ct::tools::Codec_polar_PAC<B_32, Q_32>*
-aff3ct::factory::Codec_polar_PAC::build<B_32, Q_32>(const aff3ct::module::CRC<B_32>*) const;
+aff3ct::factory::Codec_polar_PAC::build<B_32, Q_32>(const aff3ct::module::CRC<B_32>*,
+                                                    const std::vector<uint8_t>& conv) const;
 template aff3ct::tools::Codec_polar_PAC<B_64, Q_64>*
-aff3ct::factory::Codec_polar_PAC::build<B_64, Q_64>(const aff3ct::module::CRC<B_64>*) const;
+aff3ct::factory::Codec_polar_PAC::build<B_64, Q_64>(const aff3ct::module::CRC<B_64>*,
+                                                    const std::vector<uint8_t>& conv) const;
 #else
 template aff3ct::tools::Codec_polar_PAC<B, Q>*
-aff3ct::factory::Codec_polar_PAC::build<B, Q>(const aff3ct::module::CRC<B>*) const;
+aff3ct::factory::Codec_polar_PAC::build<B, Q>(const aff3ct::module::CRC<B>*, const std::vector<uint8_t>& conv) const;
 #endif
 // ==================================================================================== explicit template instantiation
-

@@ -10,11 +10,15 @@
 using namespace aff3ct::module;
 
 template<typename B>
-Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits)
+Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
+                                        const int& N,
+                                        const std::vector<bool>& frozen_bits,
+                                        const std::vector<uint8_t>& conv)
   : Encoder<B>(K, N)
   , m((int)std::log2(N))
   , frozen_bits(frozen_bits)
   , X_N_tmp(this->N)
+  , conv_reg(conv)
 {
     const std::string name = "Encoder_polar_PAC";
     this->set_name(name);
@@ -35,9 +39,11 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K, const int& N, const std::v
 
     // conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
 
-    conv_reg = { (B)1, (B)0, (B)1, (B)1, (B)0, (B)1, (B)1 };
+    // std::copy(conv.begin(), conv.end(), conv_reg.begin());
     // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
     curState.resize(conv_reg.size() - 1);
+
+    // std::cout << "Inside the Encoder_polar_PAC constructor: " << conv_reg.size() << std::endl;
 }
 
 template<typename B>
@@ -75,7 +81,7 @@ B
 Encoder_polar_PAC<B>::conv1bitEnc(B cbit)
 {
 
-    B u = cbit && conv_reg[0];
+    B u = cbit && (B)conv_reg[0];
     for (int i = 1; i < conv_reg.size(); i++)
     {
         if (conv_reg[i] == 1)
