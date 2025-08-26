@@ -5,6 +5,7 @@
 
 #include "Module/Decoder/Polar/ASCL/Decoder_polar_ASCL_MEM_fast_CA_sys.hpp"
 #include "Module/Decoder/Polar/ASCL/Decoder_polar_ASCL_fast_CA_sys.hpp"
+#include "Module/Decoder/Polar/DSCF/Decoder_polar_DSCF_naive.hpp"
 #include "Module/Decoder/Polar/SC/Decoder_polar_SC_fast_sys.hpp"
 #include "Module/Decoder/Polar/SC/Decoder_polar_SC_naive.hpp"
 #include "Module/Decoder/Polar/SC/Decoder_polar_SC_naive_sys.hpp"
@@ -72,7 +73,8 @@ Decoder_polar ::get_description(cli::Argument_map_info& args) const
     auto p = this->get_prefix();
     const std::string class_name = "factory::Decoder_polar::";
 
-    cli::add_options(args.at({ p + "-type", "D" }), 0, "SC", "SCL", "SCL_MEM", "ASCL", "ASCL_MEM", "SCAN", "SCF");
+    cli::add_options(
+      args.at({ p + "-type", "D" }), 0, "SC", "SCL", "SCL_MEM", "ASCL", "ASCL_MEM", "SCAN", "SCF", "DSCF");
 
     args.at({ p + "-implem" })->change_type(cli::Text(cli::Example_set("FAST", "NAIVE")));
 
@@ -120,7 +122,8 @@ Decoder_polar ::get_headers(std::map<std::string, tools::header_list>& headers, 
         if (this->type == "SCAN")
             headers[p].push_back(std::make_pair("Num. of iterations (i)", std::to_string(this->n_ite)));
 
-        if (this->type == "SCF") headers[p].push_back(std::make_pair("Num. of flips", std::to_string(this->flips)));
+        if (this->type == "SCF" || this->type == "DSCF")
+            headers[p].push_back(std::make_pair("Num. of flips", std::to_string(this->flips)));
 
         if (this->type == "SCL" || this->type == "SCL_MEM")
             headers[p].push_back(std::make_pair("Num. of lists (L)", std::to_string(this->L)));
@@ -175,6 +178,12 @@ Decoder_polar ::_build(const std::vector<bool>& frozen_bits,
                     return new module::
                       Decoder_polar_SCF_naive<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>, tools::h_LLR<B, Q>>(
                         this->K, this->N_cw, frozen_bits, *crc, this->flips);
+
+                if (this->type == "DSCF")
+                    return new module::
+                      Decoder_polar_DSCF_naive<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>, tools::h_LLR<B, Q>>(
+                        this->K, this->N_cw, frozen_bits, *crc, this->flips);
+
                 if (this->type == "SCL")
                     return new module::Decoder_polar_SCL_naive_CA<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>>(
                       this->K, this->N_cw, this->L, frozen_bits, *crc);
@@ -187,11 +196,12 @@ Decoder_polar ::_build(const std::vector<bool>& frozen_bits,
             if (this->type == "SCAN")
                 return new module::Decoder_polar_SCAN_naive<B, Q, tools::f_LLR<Q>, tools::v_LLR<Q>, tools::h_LLR<B, Q>>(
                   this->K, this->N_cw, this->n_ite, frozen_bits);
-            if (this->type == "SCL"){
+            if (this->type == "SCL")
+            {
                 /*std::cout << "Constructing SCL with naive decoding in: " << __FILE__ << std::endl;*/
 
                 return new module::Decoder_polar_SCL_naive<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>>(
-                        this->K, this->N_cw, this->L, frozen_bits);
+                  this->K, this->N_cw, this->L, frozen_bits);
             }
         }
     }
@@ -220,10 +230,10 @@ Decoder_polar ::_build(const std::vector<bool>& frozen_bits,
                     this->K, this->N_cw, this->n_ite, frozen_bits);
             /*std::cout << "<<<>>>inside the function: " << __func__ << "," << this->systematic << "," << this->implem*/
             /*          << this->type << std::endl;*/
-            if (this->type == "SCL"){
+            if (this->type == "SCL")
+            {
                 return new module::Decoder_polar_SCL_naive_sys<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>>(
-                        this->K, this->N_cw, this->L, frozen_bits);
-                
+                  this->K, this->N_cw, this->L, frozen_bits);
             }
         }
         else if (this->implem == "FAST")

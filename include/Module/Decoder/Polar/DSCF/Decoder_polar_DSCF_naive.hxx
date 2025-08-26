@@ -105,6 +105,8 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, cons
     bool decode_result = false;
     int n_ite = 0;
 
+    // std::cout << "Inside the decoding DESCF" << std::endl;
+
     // initialize indices with inf bits indices
     // TODO: move to notify_frozen ?
     auto j = 0;
