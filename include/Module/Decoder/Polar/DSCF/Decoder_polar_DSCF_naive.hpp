@@ -31,6 +31,10 @@ class Decoder_polar_DSCF_naive : public Decoder_polar_SC_naive<B, R, F, G, H>
     std::vector<int> index;
     int current_flip_index;
 
+    std::vector<double> M_flips;
+    std::vector<double> L_flips;
+    std::vector<uint32_t> E_t;
+
   public:
     Decoder_polar_DSCF_naive(const int& K,
                              const int& N,
@@ -48,6 +52,8 @@ class Decoder_polar_DSCF_naive : public Decoder_polar_SC_naive<B, R, F, G, H>
     int _decode_siho(const R* Y_N, B* V_K, const size_t frame_id);
     int _decode_siho_cw(const R* Y_N, B* V_N, const size_t frame_id);
     void recursive_decode(const tools::Binary_node<Contents_SC<B, R>>* node_curr);
+
+    void init();
 };
 }
 }

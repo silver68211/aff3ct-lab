@@ -98,6 +98,21 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::recursive_decode(const tools::Binary_no
 }
 
 template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G, tools::proto_h<B, R> H>
+void
+Decoder_polar_DSCF_naive<B, R, F, G, H>::init()
+{
+    // get tree leaves
+    auto& leaves = this->polar_tree.get_leaves();
+
+    // identify the n_flips weakest llrs
+    // std::partial_sort(index.begin(),
+    //                   index.begin() + n_flips,
+    //                   index.end(),
+    //                   [&leaves](const int& a, const int& b)
+    //                   { return std::abs(leaves[a]->get_c()->lambda[0]) < std::abs(leaves[b]->get_c()->lambda[0]); });
+}
+
+template<typename B, typename R, tools::proto_f<R> F, tools::proto_g<B, R> G, tools::proto_h<B, R> H>
 int
 Decoder_polar_DSCF_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, const size_t frame_id)
 {
