@@ -6,6 +6,7 @@
 
 #include "Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
 #include "Tools/Code/Polar/fb_assert.h"
+#include "Tools/Exception/invalid_argument/invalid_argument.hpp"
 
 using namespace aff3ct::module;
 
@@ -13,12 +14,11 @@ template<typename B>
 Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
                                         const int& N,
                                         const std::vector<bool>& frozen_bits,
-                                        const std::vector<uint8_t>& conv)
+                                        const std::string& conv)
   : Encoder<B>(K, N)
   , m((int)std::log2(N))
   , frozen_bits(frozen_bits)
   , X_N_tmp(this->N)
-  , conv_reg(conv)
 {
     const std::string name = "Encoder_polar_PAC";
     this->set_name(name);
@@ -41,6 +41,41 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
 
     // std::copy(conv.begin(), conv.end(), conv_reg.begin());
     // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
+    // std::cout << "Encoder conv: " << conv << std::endl;
+    if (conv == "NO")
+    {
+        std::stringstream message;
+        message << "'conv' has not been set";
+        throw spu::tools::invalid_argument(__FILE__, __LINE__, __func__, message.str());
+    }
+
+    if (conv.substr(0, 2) != "0o")
+    {
+        std::stringstream message;
+        message << "'conv' is not provided in the octal format";
+        throw spu::tools::invalid_argument(__FILE__, __LINE__, __func__, message.str());
+    }
+
+    conv_reg.push_back(1);
+
+    for (int i = 0; i < conv.length() - 2; i++)
+    {
+        uint32_t temp = conv[i + 2] - 48;
+        uint8_t a = (temp >> 0) & 1;
+        uint8_t b = (temp >> 1) & 1;
+        uint8_t c = (temp >> 2) & 1;
+        conv_reg.push_back(c);
+        conv_reg.push_back(b);
+        conv_reg.push_back(a);
+    }
+
+    std::cout << "Inside the encoder conv_reg: " << conv_reg.size() << " ";
+    for (int i = 0; i < conv_reg.size(); i++)
+    {
+        std::cout << (int)conv_reg[i] << ",";
+    }
+    std::cout << std::endl;
+
     curState.resize(conv_reg.size() - 1);
 
     // std::cout << "Inside the Encoder_polar_PAC constructor: " << conv_reg.size() << std::endl;

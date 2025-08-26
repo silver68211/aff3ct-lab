@@ -38,7 +38,7 @@ class Encoder_polar_PAC : public Encoder
 
     // builder
     template<typename B = int>
-    module::Encoder_polar_PAC<B>* build(const std::vector<bool>& frozen_bits, const std::vector<uint8_t>& conv) const;
+    module::Encoder_polar_PAC<B>* build(const std::vector<bool>& frozen_bits) const;
 };
 }
 }

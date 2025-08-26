@@ -50,10 +50,12 @@ Encoder_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& heade
 
 template<typename B>
 module::Encoder_polar_PAC<B>*
-Encoder_polar_PAC ::build(const std::vector<bool>& frozen_bits, const std::vector<uint8_t>& conv) const
+Encoder_polar_PAC ::build(const std::vector<bool>& frozen_bits) const
 {
+    // std::cout << "Inside the: " << __func__ << this->conv << std::endl;
 
-    if (this->type == "POLAR_PAC") return new module::Encoder_polar_PAC<B>(this->K, this->N_cw, frozen_bits, conv);
+    if (this->type == "POLAR_PAC")
+        return new module::Encoder_polar_PAC<B>(this->K, this->N_cw, frozen_bits, this->conv);
     throw spu::tools::cannot_allocate(__FILE__, __LINE__, __func__);
 }
 
@@ -61,15 +63,15 @@ Encoder_polar_PAC ::build(const std::vector<bool>& frozen_bits, const std::vecto
 #include "Tools/types.h"
 #ifdef AFF3CT_MULTI_PREC
 template aff3ct::module::Encoder_polar_PAC<B_8>*
-aff3ct::factory::Encoder_polar_PAC::build<B_8>(const std::vector<bool>&, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Encoder_polar_PAC::build<B_8>(const std::vector<bool>&) const;
 template aff3ct::module::Encoder_polar_PAC<B_16>*
-aff3ct::factory::Encoder_polar_PAC::build<B_16>(const std::vector<bool>&, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Encoder_polar_PAC::build<B_16>(const std::vector<bool>&) const;
 template aff3ct::module::Encoder_polar_PAC<B_32>*
-aff3ct::factory::Encoder_polar_PAC::build<B_32>(const std::vector<bool>&, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Encoder_polar_PAC::build<B_32>(const std::vector<bool>&) const;
 template aff3ct::module::Encoder_polar_PAC<B_64>*
-aff3ct::factory::Encoder_polar_PAC::build<B_64>(const std::vector<bool>&, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Encoder_polar_PAC::build<B_64>(const std::vector<bool>&) const;
 #else
 template aff3ct::module::Encoder_polar_PAC<B>*
-aff3ct::factory::Encoder_polar_PAC::build<B>(const std::vector<bool>&, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Encoder_polar_PAC::build<B>(const std::vector<bool>&) const;
 #endif
 // ==================================================================================== explicit template instantiation

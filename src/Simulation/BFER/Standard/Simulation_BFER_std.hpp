@@ -43,7 +43,7 @@ class Simulation_BFER_std : public Simulation_BFER<B, R>
   protected:
     std::unique_ptr<spu::module::Source<B>> build_source();
     std::unique_ptr<module::CRC<B>> build_crc();
-    std::unique_ptr<tools ::Codec_SIHO<B, Q>> build_codec(const module::CRC<B>* crc, const std::vector<uint8_t>& conv);
+    std::unique_ptr<tools ::Codec_SIHO<B, Q>> build_codec(const module::CRC<B>* crc);
     std::unique_ptr<module::Modem<B, R, R>> build_modem(const tools::Distributions<R>* distributions,
                                                         const tools::Constellation<R>* constellation);
     std::unique_ptr<module::Channel<R>> build_channel(const tools::Distributions<R>* distributions);

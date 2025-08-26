@@ -6,6 +6,7 @@
 #define DECODER_POLAR_SCL_NAIVE
 
 #include <set>
+#include <string>
 #include <vector>
 
 #include "Tools/Algo/Tree/Binary/Binary_node.hpp"
@@ -68,7 +69,7 @@ class Decoder_polar_PAC_SCL_naive
                                 const int& N,
                                 const int& L,
                                 const std::vector<bool>& frozen_bits,
-                                const std::vector<uint8_t>& conv);
+                                const std::string& conv);
     virtual ~Decoder_polar_PAC_SCL_naive();
 
     virtual Decoder_polar_PAC_SCL_naive<B, R, F, G>* clone() const;

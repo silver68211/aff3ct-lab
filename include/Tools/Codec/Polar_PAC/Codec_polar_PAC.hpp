@@ -44,8 +44,7 @@ class Codec_polar_PAC
                     const factory::Encoder_polar_PAC& enc_par,
                     const factory::Decoder_polar_PAC& dec_par,
                     const factory::Puncturer_polar* pct_par = nullptr,
-                    const module::CRC<B>* crc = nullptr,
-                    const std::vector<uint8_t>& conv = {});
+                    const module::CRC<B>* crc = nullptr);
     virtual ~Codec_polar_PAC() = default;
 
     virtual Codec_polar_PAC<B, Q>* clone() const;

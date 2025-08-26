@@ -34,14 +34,14 @@ Codec_SIHO ::Codec_SIHO(const std::string& name, const std::string& prefix)
 
 template<typename B, typename Q>
 tools::Codec_SIHO<B, Q>*
-Codec_SIHO ::build(const module::CRC<B>* crc, const std::vector<uint8_t>& conv) const
+Codec_SIHO ::build(const module::CRC<B>* crc) const
 {
 
     if (get_name() == Codec_BCH_name) return dynamic_cast<const Codec_BCH&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_LDPC_name) return dynamic_cast<const Codec_LDPC&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_polar_name) return dynamic_cast<const Codec_polar&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_polar_PAC_name)
-        return dynamic_cast<const Codec_polar_PAC&>(*this).template build<B, Q>(crc, conv);
+        return dynamic_cast<const Codec_polar_PAC&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_polar_MK_name) return dynamic_cast<const Codec_polar_MK&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_RA_name) return dynamic_cast<const Codec_RA&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_repetition_name)
@@ -62,16 +62,13 @@ Codec_SIHO ::build(const module::CRC<B>* crc, const std::vector<uint8_t>& conv) 
 #include "Tools/types.h"
 #ifdef AFF3CT_MULTI_PREC
 template aff3ct::tools::Codec_SIHO<B_8, Q_8>*
-aff3ct::factory::Codec_SIHO::build<B_8, Q_8>(const aff3ct::module::CRC<B_8>*, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Codec_SIHO::build<B_8, Q_8>(const aff3ct::module::CRC<B_8>*) const;
 template aff3ct::tools::Codec_SIHO<B_16, Q_16>*
-aff3ct::factory::Codec_SIHO::build<B_16, Q_16>(const aff3ct::module::CRC<B_16>*,
-                                               const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Codec_SIHO::build<B_16, Q_16>(const aff3ct::module::CRC<B_16>*) const;
 template aff3ct::tools::Codec_SIHO<B_32, Q_32>*
-aff3ct::factory::Codec_SIHO::build<B_32, Q_32>(const aff3ct::module::CRC<B_32>*,
-                                               const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Codec_SIHO::build<B_32, Q_32>(const aff3ct::module::CRC<B_32>*) const;
 template aff3ct::tools::Codec_SIHO<B_64, Q_64>*
-aff3ct::factory::Codec_SIHO::build<B_64, Q_64>(const aff3ct::module::CRC<B_64>*,
-                                               const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Codec_SIHO::build<B_64, Q_64>(const aff3ct::module::CRC<B_64>*) const;
 #else
 template aff3ct::tools::Codec_SIHO<B, Q>*
 aff3ct::factory::Codec_SIHO::build<B, Q>(const aff3ct::module::CRC<B>*) const;

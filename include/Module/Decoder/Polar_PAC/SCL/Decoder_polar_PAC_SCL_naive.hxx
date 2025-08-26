@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <pthread.h>
+#include <string>
 #endif
 #include <algorithm>
 #include <cmath>
@@ -26,14 +27,13 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
                                                                      const int& N,
                                                                      const int& L,
                                                                      const std::vector<bool>& frozen_bits,
-                                                                     const std::vector<uint8_t>& conv)
+                                                                     const std::string& conv)
   : Decoder_SIHO<B, R>(K, N)
   , m((int)std::log2(N))
   , metric_init(std::numeric_limits<R>::min())
   , frozen_bits(frozen_bits)
   , L(L)
   , polar_trees(L, tools::Binary_tree_metric<Contents_PAC_SCL<B, R>, R>(this->m + 1, metric_init))
-  , conv_reg(conv)
 {
     /*std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;*/
     const std::string name = "Decoder_polar_PAC_SCL_naive";
@@ -96,6 +96,41 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     // conv_reg = { (B)1, (B)0, (B)0, (B)0, (B)0, (B)0, (B)0 };
     /*std::cout << "conv_reg[0]: " << conv_reg[0] << ","*/
     /*          << spu::tools::bit_init<B>() << std::endl;*/
+
+    // std::cout << "Conv string: " << conv << std::endl;
+    if (conv == "NO")
+    {
+        std::stringstream message;
+        message << "'conv' has not been set";
+        throw spu::tools::invalid_argument(__FILE__, __LINE__, __func__, message.str());
+    }
+
+    if (conv.substr(0, 2) != "0o")
+    {
+        std::stringstream message;
+        message << "'conv' is not provided in the octal format";
+        throw spu::tools::invalid_argument(__FILE__, __LINE__, __func__, message.str());
+    }
+
+    conv_reg.push_back(1);
+
+    for (int i = 0; i < conv.length() - 2; i++)
+    {
+        uint32_t temp = conv[i + 2] - 48;
+        uint8_t a = (temp >> 0) & 1;
+        uint8_t b = (temp >> 1) & 1;
+        uint8_t c = (temp >> 2) & 1;
+        conv_reg.push_back(c);
+        conv_reg.push_back(b);
+        conv_reg.push_back(a);
+    }
+
+    std::cout << "Inside the decoder conv_reg: " << conv_reg.size() << " ";
+    for (int i = 0; i < conv_reg.size(); i++)
+    {
+        std::cout << (int)conv_reg[i] << ",";
+    }
+    std::cout << std::endl;
 
     for (auto i = 0; i < L; i++)
         curStates.push_back(std::vector<B>(conv_reg.size() - 1, (B)0));

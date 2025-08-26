@@ -127,12 +127,12 @@ template<typename B, typename Q, class API_polar>
 module::Decoder_SIHO<B, Q>*
 Decoder_polar_PAC ::_build(const std::vector<bool>& frozen_bits,
                            const module::CRC<B>* crc,
-                           module::Encoder<B>*, /*encoder*/
-                           const std::vector<uint8_t>& conv) const
+                           module::Encoder<B>* /*encoder*/
+) const
 {
 
     return new module::Decoder_polar_PAC_SCL_naive<B, Q, tools::f_LLR<Q>, tools::g_LLR<B, Q>>(
-      this->K, this->N_cw, this->L, frozen_bits, conv);
+      this->K, this->N_cw, this->L, frozen_bits, this->conv);
 
     throw spu::tools::cannot_allocate(__FILE__, __LINE__, __func__);
 }
@@ -141,8 +141,7 @@ template<typename B, typename Q>
 module::Decoder_SIHO<B, Q>*
 Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
                           const module::CRC<B>* crc,
-                          module::Encoder<B>* encoder,
-                          const std::vector<uint8_t>& conv) const
+                          module::Encoder<B>* encoder) const
 {
     try
     {
@@ -168,7 +167,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
                 using API_polar = tools::API_polar_static_inter<B, Q>;
 #endif
 #endif
-                return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+                return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
             }
             else
             {
@@ -177,7 +176,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 #else
                 using API_polar = tools::API_polar_static_inter<B, Q>;
 #endif
-                return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+                return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
             }
         }
         else if (this->simd_strategy == "INTRA" && this->implem == "FAST")
@@ -189,7 +188,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 #else
                 using API_polar = tools::API_polar_static_intra_8bit<B, Q>;
 #endif
-                return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+                return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
             }
             else if (typeid(B) == typeid(short))
             {
@@ -198,7 +197,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 #else
                 using API_polar = tools::API_polar_static_intra_16bit<B, Q>;
 #endif
-                return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+                return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
             }
             else if (typeid(B) == typeid(int))
             {
@@ -207,7 +206,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 #else
                 using API_polar = tools::API_polar_static_intra_32bit<B, Q>;
 #endif
-                return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+                return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
             }
         }
         else if (this->simd_strategy.empty())
@@ -217,7 +216,7 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 #else
             using API_polar = tools::API_polar_static_seq<B, Q>;
 #endif
-            return _build<B, Q, API_polar>(frozen_bits, crc, encoder, conv);
+            return _build<B, Q, API_polar>(frozen_bits, crc, encoder);
         }
     }
 
@@ -244,28 +243,23 @@ Decoder_polar_PAC ::build(const std::vector<bool>& frozen_bits,
 template aff3ct::module::Decoder_SIHO<B_8, Q_8>*
 aff3ct::factory::Decoder_polar_PAC::build<B_8, Q_8>(const std::vector<bool>&,
                                                     const module::CRC<B_8>*,
-                                                    module::Encoder<B_8>*,
-                                                    const std::vector<uint8_t>& conv) const;
+                                                    module::Encoder<B_8>*) const;
 template aff3ct::module::Decoder_SIHO<B_16, Q_16>*
 aff3ct::factory::Decoder_polar_PAC::build<B_16, Q_16>(const std::vector<bool>&,
                                                       const module::CRC<B_16>*,
-                                                      module::Encoder<B_16>*,
-                                                      const std::vector<uint8_t>& conv) const;
+                                                      module::Encoder<B_16>*) const;
 template aff3ct::module::Decoder_SIHO<B_32, Q_32>*
 aff3ct::factory::Decoder_polar_PAC::build<B_32, Q_32>(const std::vector<bool>&,
                                                       const module::CRC<B_32>*,
-                                                      module::Encoder<B_32>*,
-                                                      const std::vector<uint8_t>& conv) const;
+                                                      module::Encoder<B_32>*) const;
 template aff3ct::module::Decoder_SIHO<B_64, Q_64>*
 aff3ct::factory::Decoder_polar_PAC::build<B_64, Q_64>(const std::vector<bool>&,
                                                       const module::CRC<B_64>*,
-                                                      module::Encoder<B_64>*,
-                                                      const std::vector<uint8_t>& conv) const;
+                                                      module::Encoder<B_64>*) const;
 #else
 template aff3ct::module::Decoder_SIHO<B, Q>*
 aff3ct::factory::Decoder_polar_PAC::build<B, Q>(const std::vector<bool>&,
                                                 const module::CRC<B>*,
-                                                module::Encoder<B>*,
-                                                const std::vector<uint8_t>& conv) const;
+                                                module::Encoder<B>*) const;
 #endif
 // ==================================================================================== explicit template instantiation

@@ -32,6 +32,7 @@ class Decoder : public Factory
     // optional parameters
     std::string type = "ML";
     std::string implem = "STD";
+    std::string conv = "NO";
     bool systematic = true;
     bool hamming = false;
     int tail_length = 0;

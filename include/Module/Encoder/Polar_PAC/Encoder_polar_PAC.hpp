@@ -27,10 +27,7 @@ class Encoder_polar_PAC
     std::vector<B> curState;
 
   public:
-    Encoder_polar_PAC(const int& K,
-                      const int& N,
-                      const std::vector<bool>& frozen_bits,
-                      const std::vector<uint8_t>& conv);
+    Encoder_polar_PAC(const int& K, const int& N, const std::vector<bool>& frozen_bits, const std::string& conv);
     virtual ~Encoder_polar_PAC() = default;
 
     virtual Encoder_polar_PAC<B>* clone() const;
