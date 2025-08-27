@@ -104,6 +104,19 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::init()
     // get tree leaves
     auto& leaves = this->polar_tree.get_leaves();
 
+    for (int i = 0; i < index.size(); i++)
+    {
+        int i1 = index[i];
+        double metric = 1 / (1 + std::exp(std::abs(leaves[i1]->get_c()->lambda[0])));
+        for (int j = 0; j < i1; j++)
+        {
+            if (!this->frozen_bits[j])
+            {
+                metric *= 1 / (1 + std::exp(-std::abs(leaves[j]->get_c()->lambda[0])));
+            }
+        }
+        metrics.emplace(std::make_pair(i1, metric));
+    }
     // identify the n_flips weakest llrs
     // std::partial_sort(index.begin(),
     //                   index.begin() + n_flips,
@@ -140,6 +153,12 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, cons
 
     this->recursive_decode(this->polar_tree.get_root());
 
+    this->init();
+
+    for (auto arr : metrics)
+    {
+        std::cout << arr.first << "," << arr.second << std::endl;
+    }
     // get tree leaves
     auto& leaves = this->polar_tree.get_leaves();
 
