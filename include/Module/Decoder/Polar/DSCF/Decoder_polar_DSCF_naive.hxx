@@ -104,19 +104,40 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::init()
     // get tree leaves
     auto& leaves = this->polar_tree.get_leaves();
 
+    // Probability domain
+    // for (int i = 0; i < index.size(); i++)
+    // {
+    //     int i1 = index[i];
+    //     double metric = 1 / (1 + std::exp(std::abs(leaves[i1]->get_c()->lambda[0])));
+    //     for (const auto& j : index)
+    //     {
+    //         if (j < i1)
+    //         {
+    //             metric *= 1 / (1 + std::exp(-std::abs(leaves[j]->get_c()->lambda[0])));
+    //         }
+    //     }
+    //     metrics.emplace_back(std::make_pair(i1, metric));
+    // }
+    // Log-domain
+
     for (int i = 0; i < index.size(); i++)
     {
         int i1 = index[i];
-        double metric = 1 / (1 + std::exp(std::abs(leaves[i1]->get_c()->lambda[0])));
-        for (int j = 0; j < i1; j++)
+        double metric = std::abs(leaves[i1]->get_c()->lambda[0]);
+        for (const auto& j : index)
         {
-            if (!this->frozen_bits[j])
+            if (j < i1)
             {
-                metric *= 1 / (1 + std::exp(-std::abs(leaves[j]->get_c()->lambda[0])));
+                metric += std::log(1 + std::exp(-std::abs(leaves[j]->get_c()->lambda[0])));
+            }
+            else
+            {
+                break;
             }
         }
-        metrics.emplace(std::make_pair(i1, metric));
+        metrics.emplace_back(std::make_pair(i1, metric));
     }
+
     // identify the n_flips weakest llrs
     // std::partial_sort(index.begin(),
     //                   index.begin() + n_flips,
@@ -155,25 +176,33 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, cons
 
     this->init();
 
-    for (auto arr : metrics)
-    {
-        std::cout << arr.first << "," << arr.second << std::endl;
-    }
+    std::partial_sort(metrics.begin(),
+                      metrics.begin() + n_flips,
+                      metrics.end(),
+                      [](const std::pair<int, double>& a, const std::pair<int, double>& b)
+                      { return a.second < b.second; });
+
+    // for (const auto& arr : metrics)
+    // {
+    //     std::cout << arr.first << "," << arr.second << std::endl;
+    // }
     // get tree leaves
     auto& leaves = this->polar_tree.get_leaves();
 
     // identify the n_flips weakest llrs
-    std::partial_sort(index.begin(),
-                      index.begin() + n_flips,
-                      index.end(),
-                      [&leaves](const int& a, const int& b)
-                      { return std::abs(leaves[a]->get_c()->lambda[0]) < std::abs(leaves[b]->get_c()->lambda[0]); });
+    // std::partial_sort(index.begin(),
+    //                   index.begin() + n_flips,
+    //                   index.end(),
+    //                   [&leaves](const int& a, const int& b)
+    //                   { return std::abs(leaves[a]->get_c()->lambda[0]) < std::abs(leaves[b]->get_c()->lambda[0]); });
 
     decode_result = this->check_crc(frame_id);
 
     while ((n_ite < n_flips) && (!decode_result))
     {
-        current_flip_index = index[n_ite];
+        auto cur = metrics[n_ite];
+        // current_flip_index = index[n_ite];
+        current_flip_index = cur.first;
 
         this->recursive_decode(this->polar_tree.get_root());
 

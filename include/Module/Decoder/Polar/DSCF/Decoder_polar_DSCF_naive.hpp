@@ -34,7 +34,9 @@ class Decoder_polar_DSCF_naive : public Decoder_polar_SC_naive<B, R, F, G, H>
     std::vector<double> M_flips;
     std::vector<double> L_flips;
     std::vector<uint32_t> E_t;
-    std::map<int, double> metrics;
+    // std::map<int, double> metrics;
+    // std::unordered_map<int, double> metrics;
+    std::vector<std::pair<int, double>> metrics;
 
   public:
     Decoder_polar_DSCF_naive(const int& K,
