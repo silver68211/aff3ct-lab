@@ -117,6 +117,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
     for (int i = 0; i < conv.length() - 2; i++)
     {
         uint32_t temp = conv[i + 2] - 48;
+        // std::cout << "v(" << temp << ")";
         uint8_t a = (temp >> 0) & 1;
         uint8_t b = (temp >> 1) & 1;
         uint8_t c = (temp >> 2) & 1;
@@ -221,6 +222,12 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_load(const R* Y_N)
         for (auto i = 0; i < this->N; i++)
             contents->lambda[i] = Y_N[i];
         polar_trees[path].set_path_metric(metric_init);
+
+        // for (int j = 0; j < curStates[path].size(); j++)
+        // {
+        //     curStates[path][j] = 0;
+        // }
+        std::fill(this->curStates[path].begin(), this->curStates[path].end(), 0);
     }
 
     // initialization
@@ -243,6 +250,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
 
     std::vector<std::pair<B, std::vector<B>>> mko;
     std::vector<std::pair<B, std::vector<B>>> mkz;
+    // curStates.clear();
     // std::vector<int16_t> path_list_index(this->L, 0);
     // std::cout << "The value of m: " << this->m << std::endl;
 
@@ -387,10 +395,20 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::_decode(const size_t frame_id)
                     else
                     {
                         if (std::get<3>(*it) == (B)0)
-                            curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
+                        {
+                            std::copy(std::get<0>(std::get<5>(*it)).second.begin(),
+                                      std::get<0>(std::get<5>(*it)).second.end(),
+                                      curStates[std::get<0>(*it)].begin());
+                            // curStates[std::get<0>(*it)] = std::get<0>(std::get<5>(*it)).second;
+                        }
 
                         if (std::get<3>(*it) == (B)1)
-                            curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
+                        {
+                            std::copy(std::get<1>(std::get<5>(*it)).second.begin(),
+                                      std::get<1>(std::get<5>(*it)).second.end(),
+                                      curStates[std::get<0>(*it)].begin());
+                            // curStates[std::get<0>(*it)] = std::get<1>(std::get<5>(*it)).second;
+                        }
                         // if (std::get<3>(*it) == (B)0) curStates[std::get<0>(*it)] = mkz[std::get<0>(*it)].second;
                         // if (std::get<3>(*it) == (B)1) curStates[std::get<0>(*it)] = mko[std::get<0>(*it)].second;
 
@@ -598,13 +616,15 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::duplicate_path(int path,
         recursive_duplicate_tree_llr(leaves_array[path][leaf_index + 1], leaves_array[newpath][leaf_index + 1]);
 
     curStates[newpath] = mko.second;
+    std::copy(mko.second.begin(), mko.second.end(), curStates[newpath].begin());
     leaves_array[newpath][leaf_index]->get_c()->s[0] = mko.first ? spu::tools::bit_init<B>() : 0;
     leaves_array[newpath][leaf_index]->get_c()->v[0] = 1;
     polar_trees[newpath].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
                                                           leaves_array[path][leaf_index]->get_c()->lambda[0],
                                                           leaves_array[newpath][leaf_index]->get_c()->s[0]));
 
-    curStates[path] = mkz.second;
+    // curStates[path] = mkz.second;
+    std::copy(mkz.second.begin(), mkz.second.end(), curStates[path].begin());
     leaves_array[path][leaf_index]->get_c()->s[0] = mkz.first ? spu::tools::bit_init<B>() : 0;
     leaves_array[path][leaf_index]->get_c()->v[0] = 0;
     polar_trees[path].set_path_metric(tools::phi<B, R>(polar_trees[path].get_path_metric(),
@@ -622,6 +642,10 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::select_best_path(const size_t /*frame*/
     for (int path : active_paths)
         if (polar_trees[path].get_path_metric() < polar_trees[best_path].get_path_metric()) best_path = path;
 
+    // for (int path : active_paths)
+    //     std::cout << "," << polar_trees[path].get_path_metric(); // << std::endl;
+    //
+    // std::cout << std::endl;
     active_paths.clear();
     active_paths.insert(best_path);
 }
@@ -770,7 +794,10 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::conv1bitEnc(B cbit, std::vector<B>& sta
     nextState[0] = cbit;
     int n_i = 1;
     for (int i = 0; i < state.size() - 1; i++)
-        nextState[n_i++] = state[i];
+    {
+        nextState[n_i] = state[i];
+        n_i++;
+    }
 
     /*for (int i = curStates[l].size() - 1; i >= 1; i--)*/
     /*    curStates[l][i] = (B)curStates[l][i - 1];*/

@@ -139,6 +139,7 @@ Encoder_polar_PAC<B>::convEnc(B* X_N)
 
     std::vector<uint8_t> cState(conv_reg.size() - 1, 0);
     std::vector<uint8_t> u(this->N, 0);
+    std::fill(curState.begin(), curState.end(), 0);
 
     /*std::cout << "Original: [";*/
     for (int i = 0; i < this->N; ++i)
