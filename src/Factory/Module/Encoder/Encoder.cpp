@@ -81,7 +81,8 @@ Encoder ::get_headers(std::map<std::string, tools::header_list>& headers, const 
     if (full) headers[p].push_back(std::make_pair("Code rate (R)", std::to_string(this->R)));
     // if (full) headers[p].push_back(std::make_pair("Convolution", this->conv));
 
-    headers[p].push_back(std::make_pair("Convolution", this->conv));
+    if (this->type == "POLAR_PAC") headers[p].push_back(std::make_pair("Convolution", this->conv));
+
     headers[p].push_back(std::make_pair("Systematic", ((this->systematic) ? "yes" : "no")));
     if (this->type == "USER") headers[p].push_back(std::make_pair("Path", this->path));
     if (this->type == "COSET" && full) headers[p].push_back(std::make_pair("Seed", std::to_string(this->seed)));
