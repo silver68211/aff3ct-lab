@@ -25,13 +25,11 @@ class Contents_SCL
   public:
     std::vector<R> lambda;
     std::vector<B> s;
-    std::vector<B> u;
     bool is_frozen_bit;
 
     explicit Contents_SCL(int size)
       : lambda(size)
       , s(size)
-      , u(size)
       , is_frozen_bit(0)
     {
     }
