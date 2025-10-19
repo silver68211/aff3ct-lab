@@ -2,8 +2,8 @@
  * \file
  * \brief Class module::Decoder_polar_PAC_SCL_naive.
  */
-#ifndef DECODER_POLAR_SCL_NAIVE
-#define DECODER_POLAR_SCL_NAIVE
+#ifndef DECODER_POLAR_PAC_SCL_NAIVE
+#define DECODER_POLAR_PAC_SCL_NAIVE
 
 #include <set>
 #include <string>
@@ -123,4 +123,4 @@ class Decoder_polar_PAC_SCL_naive
 #include "Module/Decoder/Polar_PAC/SCL/Decoder_polar_PAC_SCL_naive.hxx"
 #endif
 
-#endif /* DECODER_POLAR_SCL_NAIVE_ */
+#endif /* DECODER_POLAR_PAC_SCL_NAIVE_ */
