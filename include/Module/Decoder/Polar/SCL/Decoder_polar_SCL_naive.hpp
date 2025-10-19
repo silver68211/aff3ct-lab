@@ -34,7 +34,6 @@ class Contents_SCL
       , u(size)
       , is_frozen_bit(0)
     {
-        /*std::cout << "Inside the polar::SCL::Contents_SCL: " << u.size() << ", " << s.size() << std::endl;*/
     }
     virtual ~Contents_SCL() {}
 };

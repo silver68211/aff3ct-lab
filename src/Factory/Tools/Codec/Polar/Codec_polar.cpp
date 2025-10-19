@@ -169,7 +169,6 @@ template<typename B, typename Q>
 tools::Codec_polar<B, Q>*
 Codec_polar ::build(const module::CRC<B>* crc) const
 {
-    /*std::cout << "Inside the: " << __func__ << std::endl;*/
     return new tools::Codec_polar<B, Q>(*fbg,
                                         dynamic_cast<const Encoder_polar&>(*enc),
                                         dynamic_cast<const Decoder_polar&>(*dec),

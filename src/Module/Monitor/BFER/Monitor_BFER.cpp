@@ -520,7 +520,6 @@ Monitor_BFER<B>::Attributes ::operator+=(const Attributes& a)
     n_be += a.n_be;
     n_fe += a.n_fe;
     n_fra += a.n_fra;
-    // std::cout << "Inside the monitor bfer\n";
 
     return *this;
 }

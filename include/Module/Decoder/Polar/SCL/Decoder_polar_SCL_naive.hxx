@@ -27,11 +27,9 @@ Decoder_polar_SCL_naive<B, R, F, G>::Decoder_polar_SCL_naive(const int& K,
   , L(L)
   , polar_trees(L, tools::Binary_tree_metric<Contents_SCL<B, R>, R>(this->m + 1, metric_init))
 {
-    /*std::cout << "Inside the SCL naive decoder: " << __FILE__ << std::endl;*/
     const std::string name = "Decoder_polar_SCL_naive";
     this->set_name(name);
 
-    /*std::cout << "Inside the SCL naive decoder: " << __LINE__ << std::endl;*/
     if (!spu::tools::is_power_of_2(this->N))
     {
         std::stringstream message;
@@ -288,10 +286,10 @@ Decoder_polar_SCL_naive<B, R, F, G>::_decode_siho(const R* Y_N, B* V_K, const si
     this->_load(Y_N);
     //	auto d_load = std::chrono::steady_clock::now() - t_load;
 
-    auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
+    //	auto t_decod = std::chrono::steady_clock::now(); // --------------------------------------------------------
     // DECODE
     this->_decode(frame_id);
-    auto d_decod = std::chrono::steady_clock::now() - t_decod;
+    //	auto d_decod = std::chrono::steady_clock::now() - t_decod;
 
     //	auto t_store = std::chrono::steady_clock::now(); // ---------------------------------------------------------
     // STORE
@@ -299,7 +297,7 @@ Decoder_polar_SCL_naive<B, R, F, G>::_decode_siho(const R* Y_N, B* V_K, const si
     //	auto d_store = std::chrono::steady_clock::now() - t_store;
 
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::load,   d_load);
-    (*this)[dec::tsk::decode_siho].update_timer((size_t)dec::tm::decode_siho::decode, d_decod);
+    //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::decode, d_decod);
     //	(*this)[dec::tsk::decode_siho].update_timer(dec::tm::decode_siho::store,  d_store);
 
     return 0;
