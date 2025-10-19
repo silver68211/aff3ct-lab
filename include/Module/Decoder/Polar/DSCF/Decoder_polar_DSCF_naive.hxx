@@ -120,7 +120,7 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::init()
     // }
     // Log-domain
 
-    for (int i = 0; i < index.size(); i++)
+    for (size_t i = 0; i < index.size(); i++)
     {
         int i1 = index[i];
         double metric = std::abs(leaves[i1]->get_c()->lambda[0]);
@@ -187,7 +187,7 @@ Decoder_polar_DSCF_naive<B, R, F, G, H>::_decode_siho(const R* Y_N, B* V_K, cons
     //     std::cout << arr.first << "," << arr.second << std::endl;
     // }
     // get tree leaves
-    auto& leaves = this->polar_tree.get_leaves();
+    // auto& leaves = this->polar_tree.get_leaves();
 
     // identify the n_flips weakest llrs
     // std::partial_sort(index.begin(),

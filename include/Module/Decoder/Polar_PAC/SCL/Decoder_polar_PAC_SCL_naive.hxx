@@ -114,7 +114,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::Decoder_polar_PAC_SCL_naive(const int& 
 
     conv_reg.push_back(1);
 
-    for (int i = 0; i < conv.length() - 2; i++)
+    for (size_t i = 0; i < conv.length() - 2; i++)
     {
         uint32_t temp = conv[i + 2] - 48;
         // std::cout << "v(" << temp << ")";
@@ -778,7 +778,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::conv1bitEnc(B cbit, std::vector<B>& sta
     /*B u = spu::tools::bop_and((B)conv_reg[0], (B)cbit);*/
     /*std::cout << "Bit u: " << u << ", conv_reg[0]: " << conv_reg[0] << ",
      * cbit: " << (B)cbit << std::endl;*/
-    for (int i = 1; i < conv_reg.size(); i++)
+    for (size_t i = 1; i < conv_reg.size(); i++)
     {
         if (conv_reg[i] == (B)1)
         {
@@ -793,7 +793,7 @@ Decoder_polar_PAC_SCL_naive<B, R, F, G>::conv1bitEnc(B cbit, std::vector<B>& sta
     std::vector<B> nextState(conv_reg.size() - 1, 0);
     nextState[0] = cbit;
     int n_i = 1;
-    for (int i = 0; i < state.size() - 1; i++)
+    for (size_t i = 0; i < state.size() - 1; i++)
     {
         nextState[n_i] = state[i];
         n_i++;
