@@ -97,7 +97,6 @@ Codec_polar<B, Q>::Codec_polar(const factory::Frozenbits_generator& fb_params,
     try
     {
         this->set_decoder_siso(dec_params.build_siso<B, Q>(*frozen_bits, &this->get_encoder()));
-
     }
     catch (const std::exception&)
     {

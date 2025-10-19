@@ -38,7 +38,8 @@ Codec_HIHO ::build(const module::CRC<B>* crc) const
     if (get_name() == Codec_BCH_name) return dynamic_cast<const Codec_BCH&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_LDPC_name) return dynamic_cast<const Codec_LDPC&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_polar_name) return dynamic_cast<const Codec_polar&>(*this).template build<B, Q>(crc);
-//    if (get_name() == Codec_polar_PAC_name) return dynamic_cast<const Codec_polar_PAC&>(*this).template build<B, Q>(crc);
+    //    if (get_name() == Codec_polar_PAC_name) return dynamic_cast<const Codec_polar_PAC&>(*this).template build<B,
+    //    Q>(crc);
     if (get_name() == Codec_RA_name) return dynamic_cast<const Codec_RA&>(*this).template build<B, Q>(crc);
     if (get_name() == Codec_repetition_name)
         return dynamic_cast<const Codec_repetition&>(*this).template build<B, Q>(crc);
