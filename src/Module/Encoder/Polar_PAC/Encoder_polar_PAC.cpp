@@ -58,7 +58,7 @@ Encoder_polar_PAC<B>::Encoder_polar_PAC(const int& K,
 
     conv_reg.push_back(1);
 
-    for (int i = 0; i < conv.length() - 2; i++)
+    for (size_t i = 0; i < conv.length() - 2; i++)
     {
         uint32_t temp = conv[i + 2] - 48;
         uint8_t a = (temp >> 0) & 1;
@@ -117,7 +117,7 @@ Encoder_polar_PAC<B>::conv1bitEnc(B cbit)
 {
 
     B u = cbit && (B)conv_reg[0];
-    for (int i = 1; i < conv_reg.size(); i++)
+    for (size_t i = 1; i < conv_reg.size(); i++)
     {
         if (conv_reg[i] == 1)
         {

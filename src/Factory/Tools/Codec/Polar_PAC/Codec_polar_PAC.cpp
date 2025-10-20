@@ -192,6 +192,6 @@ template aff3ct::tools::Codec_polar_PAC<B_64, Q_64>*
 aff3ct::factory::Codec_polar_PAC::build<B_64, Q_64>(const aff3ct::module::CRC<B_64>*) const;
 #else
 template aff3ct::tools::Codec_polar_PAC<B, Q>*
-aff3ct::factory::Codec_polar_PAC::build<B, Q>(const aff3ct::module::CRC<B>*, const std::vector<uint8_t>& conv) const;
+aff3ct::factory::Codec_polar_PAC::build<B, Q>(const aff3ct::module::CRC<B>*) const;
 #endif
 // ==================================================================================== explicit template instantiation
