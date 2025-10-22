@@ -30,7 +30,6 @@ class Encoder : public Factory
     // optional parameters
     std::string type = "AZCW";
     std::string path = "";
-    std::string conv = "NO";
     bool systematic = true;
     int seed = 0;
     int tail_length = 0;

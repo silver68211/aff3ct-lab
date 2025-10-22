@@ -24,7 +24,7 @@ class Encoder_polar_PAC : public Encoder
 {
   public:
     // ----------------------------------------------------------------------------------------------------- PARAMETERS
-    // empty
+    std::string conv = "NO";
 
     // -------------------------------------------------------------------------------------------------------- METHODS
     explicit Encoder_polar_PAC(const std::string& p = Encoder_polar_PAC_prefix);

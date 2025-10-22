@@ -34,18 +34,27 @@ Encoder_polar_PAC ::get_description(cli::Argument_map_info& args) const
     cli::add_options(args.at({ p + "-type" }), 0, "POLAR_PAC");
 
     tools::add_arg(args, p, class_name + "p+no-sys", cli::None());
+    tools::add_arg(args, p, class_name + "p+conv", cli::Text());
 }
 
 void
 Encoder_polar_PAC ::store(const cli::Argument_map_value& vals)
 {
     Encoder::store(vals);
+
+    auto p = this->get_prefix();
+
+    if (vals.exist({ p + "-conv" })) this->conv = vals.at({ p + "-conv" });
 }
 
 void
 Encoder_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& headers, const bool full) const
 {
     Encoder::get_headers(headers, full);
+
+    auto p = this->get_prefix();
+
+    headers[p].push_back(std::make_pair("Convolution", this->conv));
 }
 
 template<typename B>

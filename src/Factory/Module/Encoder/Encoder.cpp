@@ -48,15 +48,12 @@ Encoder ::get_description(cli::Argument_map_info& args) const
     tools::add_arg(args, p, class_name + "p+start-idx", cli::Integer(cli::Positive()));
 
     tools::add_arg(args, p, class_name + "p+seed,S", cli::Integer(cli::Positive()));
-
-    tools::add_arg(args, p, class_name + "p+conv", cli::Text());
 }
 
 void
 Encoder ::store(const cli::Argument_map_value& vals)
 {
     auto p = this->get_prefix();
-    // std::cout << "Prefix: " << p << std::endl;
 
     if (vals.exist({ p + "-info-bits", "K" })) this->K = vals.to_int({ p + "-info-bits", "K" });
     if (vals.exist({ p + "-cw-size", "N" })) this->N_cw = vals.to_int({ p + "-cw-size", "N" });
@@ -65,7 +62,6 @@ Encoder ::store(const cli::Argument_map_value& vals)
     if (vals.exist({ p + "-path" })) this->path = vals.to_file({ p + "-path" });
     if (vals.exist({ p + "-no-sys" })) this->systematic = false;
     if (vals.exist({ p + "-start-idx" })) this->start_idx = vals.to_int({ p + "-start-idx" });
-    if (vals.exist({ p + "-conv" })) this->conv = vals.at({ p + "-conv" });
 
     this->R = (float)this->K / (float)this->N_cw;
 }
@@ -79,10 +75,6 @@ Encoder ::get_headers(std::map<std::string, tools::header_list>& headers, const 
     if (full) headers[p].push_back(std::make_pair("Info. bits (K)", std::to_string(this->K)));
     if (full) headers[p].push_back(std::make_pair("Codeword size (N)", std::to_string(this->N_cw)));
     if (full) headers[p].push_back(std::make_pair("Code rate (R)", std::to_string(this->R)));
-    // if (full) headers[p].push_back(std::make_pair("Convolution", this->conv));
-
-    if (this->type == "POLAR_PAC") headers[p].push_back(std::make_pair("Convolution", this->conv));
-
     headers[p].push_back(std::make_pair("Systematic", ((this->systematic) ? "yes" : "no")));
     if (this->type == "USER") headers[p].push_back(std::make_pair("Path", this->path));
     if (this->type == "COSET" && full) headers[p].push_back(std::make_pair("Seed", std::to_string(this->seed)));

@@ -148,7 +148,10 @@ Codec_polar_PAC ::store(const cli::Argument_map_value& vals)
     fbg->store(vals);
 
     dec->systematic = enc->systematic;
-    dec->conv = enc->conv;
+
+    auto enc_pac = dynamic_cast<Encoder_polar_PAC*>(enc.get());
+    auto dec_pac = dynamic_cast<Decoder_polar_PAC*>(dec.get());
+    dec_pac->conv = enc_pac->conv;
 
     dec->store(vals);
 

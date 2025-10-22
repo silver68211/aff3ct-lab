@@ -30,6 +30,7 @@ class Decoder_polar_PAC : public Decoder
     // optional parameters
     std::string simd_strategy = "";
     std::string polar_nodes = "{R0,R0L,R1,REP,REPL,SPC}";
+    std::string conv = "NO";
     bool full_adaptive = true;
     int n_ite = 1;
     int L = 8;
