@@ -24,12 +24,6 @@ Codec_polar_PAC ::clone() const
     return new Codec_polar_PAC(*this);
 }
 
-void
-Codec_polar_PAC ::enable_puncturer()
-{
-    set_pct(new Puncturer_polar("pct"));
-}
-
 std::vector<std::string>
 Codec_polar_PAC ::get_names() const
 {
@@ -110,16 +104,6 @@ Codec_polar_PAC ::get_description(cli::Argument_map_info& args) const
     args.erase({ pdec + "-cw-size", "N" });
     args.erase({ pfbg + "-cw-size", "N" });
     args.erase({ pfbg + "-info-bits", "K" });
-
-    if (pct != nullptr)
-    {
-        pct->get_description(args);
-
-        auto penc = enc->get_prefix();
-
-        args.erase({ penc + "-cw-size", "N" });
-        args.erase({ penc + "-info-bits", "K" });
-    }
 }
 
 void
@@ -127,23 +111,10 @@ Codec_polar_PAC ::store(const cli::Argument_map_value& vals)
 {
     Codec_SISO::store(vals);
 
-    if (pct != nullptr)
-    {
-        pct->store(vals);
-
-        enc->K = fbg->K = dec->K = pct->K;
-        enc->N_cw = fbg->N_cw = dec->N_cw = pct->N_cw;
-    }
-    // std::cout << "Inside the: " << __func__ << __LINE__ << std::endl;
-
     enc->store(vals);
-    // std::cout << "Encoder conv: " << enc->conv << std::endl;
 
-    if (pct == nullptr)
-    {
-        fbg->K = dec->K = enc->K;
-        fbg->N_cw = dec->N_cw = enc->N_cw;
-    }
+    fbg->K = dec->K = enc->K;
+    fbg->N_cw = dec->N_cw = enc->N_cw;
 
     fbg->store(vals);
 
@@ -155,9 +126,9 @@ Codec_polar_PAC ::store(const cli::Argument_map_value& vals)
 
     dec->store(vals);
 
-    K = pct != nullptr ? pct->K : enc->K;
-    N_cw = pct != nullptr ? pct->N_cw : enc->N_cw;
-    N = pct != nullptr ? pct->N : enc->N_cw;
+    K = enc->K;
+    N_cw = enc->N_cw;
+    N = enc->N_cw;
 }
 
 void
@@ -168,7 +139,6 @@ Codec_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& headers
     enc->get_headers(headers, full);
     fbg->get_headers(headers, full);
     dec->get_headers(headers, full);
-    if (pct != nullptr) pct->get_headers(headers, full);
 }
 
 template<typename B, typename Q>
@@ -178,7 +148,6 @@ Codec_polar_PAC ::build(const module::CRC<B>* crc) const
     return new tools::Codec_polar_PAC<B, Q>(*fbg,
                                             dynamic_cast<const Encoder_polar_PAC&>(*enc),
                                             dynamic_cast<const Decoder_polar_PAC&>(*dec),
-                                            dynamic_cast<const Puncturer_polar*>(pct.get()),
                                             crc);
 }
 

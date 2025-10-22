@@ -10,10 +10,8 @@
 
 #include "Factory/Module/Decoder/Polar_PAC/Decoder_polar_PAC.hpp"
 #include "Factory/Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
-#include "Factory/Module/Puncturer/Polar/Puncturer_polar.hpp"
 #include "Factory/Tools/Code/Polar/Frozenbits_generator.hpp"
 #include "Module/CRC/CRC.hpp"
-#include "Module/Puncturer/Polar/Puncturer_polar_shortlast.hpp"
 #include "Tools/Code/Polar/Frozenbits_generator/Frozenbits_generator.hpp"
 #include "Tools/Codec/Codec_SISO.hpp"
 #include "Tools/Interface/Interface_get_set_frozen_bits.hpp"
@@ -34,16 +32,13 @@ class Codec_polar_PAC
 
     std::shared_ptr<Frozenbits_generator> fb_generator;
 
-    module::Puncturer_polar_shortlast<B, Q>* puncturer_shortlast;
     Interface_get_set_frozen_bits* fb_decoder;
     Interface_get_set_frozen_bits* fb_encoder;
-    Interface_get_set_frozen_bits* fb_extractor;
 
   public:
     Codec_polar_PAC(const factory::Frozenbits_generator& fb_par,
                     const factory::Encoder_polar_PAC& enc_par,
                     const factory::Decoder_polar_PAC& dec_par,
-                    const factory::Puncturer_polar* pct_par = nullptr,
                     const module::CRC<B>* crc = nullptr);
     virtual ~Codec_polar_PAC() = default;
 

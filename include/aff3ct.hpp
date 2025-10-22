@@ -216,9 +216,6 @@
 #ifndef FACTORY_POLAR_CODE_HPP
 #include <Factory/Tools/Code/Polar_MK/Polar_code.hpp>
 #endif
-#ifndef FACTORY_FROZENBITS_GENERATOR_PAC_HPP
-#include <Factory/Tools/Code/Polar_PAC/Frozenbits_generator_PAC.hpp>
-#endif
 #ifndef FACTORY_FLIP_AND_CHECK_DB_HPP
 #include <Factory/Tools/Code/Turbo/Flip_and_check_DB.hpp>
 #endif

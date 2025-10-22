@@ -2,7 +2,6 @@
 
 #include "Factory/Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
 #include "Module/Encoder/Polar_PAC/Encoder_polar_PAC.hpp"
-/*#include "Module/Encoder/Polar/Encoder_polar_sys.hpp"*/
 #include "Tools/Documentation/documentation.h"
 
 using namespace aff3ct;
@@ -33,7 +32,6 @@ Encoder_polar_PAC ::get_description(cli::Argument_map_info& args) const
 
     cli::add_options(args.at({ p + "-type" }), 0, "POLAR_PAC");
 
-    tools::add_arg(args, p, class_name + "p+no-sys", cli::None());
     tools::add_arg(args, p, class_name + "p+conv", cli::Text());
 }
 
@@ -45,6 +43,7 @@ Encoder_polar_PAC ::store(const cli::Argument_map_value& vals)
     auto p = this->get_prefix();
 
     if (vals.exist({ p + "-conv" })) this->conv = vals.at({ p + "-conv" });
+    this->systematic = false;
 }
 
 void
@@ -61,8 +60,6 @@ template<typename B>
 module::Encoder_polar_PAC<B>*
 Encoder_polar_PAC ::build(const std::vector<bool>& frozen_bits) const
 {
-    // std::cout << "Inside the: " << __func__ << this->conv << std::endl;
-
     if (this->type == "POLAR_PAC")
         return new module::Encoder_polar_PAC<B>(this->K, this->N_cw, frozen_bits, this->conv);
     throw spu::tools::cannot_allocate(__FILE__, __LINE__, __func__);

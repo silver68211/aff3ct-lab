@@ -33,7 +33,6 @@ class Codec_polar_PAC : public Codec_SISO
     explicit Codec_polar_PAC(const std::string& p = Codec_polar_PAC_prefix);
     virtual ~Codec_polar_PAC() = default;
     Codec_polar_PAC* clone() const;
-    void enable_puncturer();
 
     virtual std::vector<std::string> get_names() const;
     virtual std::vector<std::string> get_short_names() const;
