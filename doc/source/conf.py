@@ -37,7 +37,7 @@ if (read_the_docs_build):
 # -- Project information -----------------------------------------------------
 
 project = 'AFF3CT'
-copyright = '2024, AFF3CT team'
+copyright = '2025, AFF3CT team'
 author = 'AFF3CT team'
 
 # get the AFF3CT version from Git
@@ -63,6 +63,7 @@ release = label
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinxcontrib.bibtex',
@@ -106,13 +107,11 @@ pygments_style = None
 
 # -- Options for HTML output -------------------------------------------------
 
-if not read_the_docs_build:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    # The theme to use for HTML and HTML Help pages.  See the documentation for
-    # a list of builtin themes.
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-
+import sphinx_rtd_theme
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
