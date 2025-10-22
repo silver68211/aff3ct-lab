@@ -9,8 +9,6 @@
 #include "Factory/Module/Coset/Coset.hpp"
 #include "Factory/Tools/Codec/Codec.hpp"
 #include "Factory/Tools/Codec/Codec_SIHO.hpp"
-#include "Module/Decoder/Decoder.hpp"
-#include "Module/Decoder/Decoder_SIHO.hpp"
 #include "Simulation/BFER/Standard/Simulation_BFER_std.hpp"
 #include "Tools/Display/Dumper/Dumper.hpp"
 #include "Tools/Display/rang_format/rang_format.h"
@@ -654,25 +652,9 @@ Simulation_BFER_std<B, R, Q>::create_sequence()
             this->dumper[tid]->register_data(channel.get_noised_data(),
                                              this->params_BFER_std.err_track_threshold,
                                              "chn",
-                                             false,
+                                             true,
                                              this->params_BFER_std.n_frames,
                                              {});
-        }
-
-        auto decoders = this->sequence->template get_modules<module::Decoder_SIHO<B, R>>();
-        for (size_t tid = 0; tid < (size_t)this->params_BFER.n_threads; tid++)
-        {
-            auto& dec = *decoders[tid];
-            auto dec_data = (B*)(dec[module::dec::sck::decode_siho::V_K].get_dataptr());
-            auto dec_bytes = dec[module::dec::sck::decode_siho::V_K].get_databytes();
-            auto dec_size = (dec_bytes / sizeof(B)) / this->params_BFER_std.n_frames;
-            this->dumper[tid]->register_data(dec_data,
-                                             (unsigned int)dec_size,
-                                             this->params_BFER_std.err_track_threshold,
-                                             "dec",
-                                             false,
-                                             this->params_BFER_std.n_frames,
-                                             { (unsigned)this->params_BFER_std.cdc->dec->K });
         }
 
         auto monitors_er = this->sequence->template get_modules<module::Monitor_BFER<B>>();
