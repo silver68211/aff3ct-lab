@@ -145,10 +145,8 @@ template<typename B, typename Q>
 tools::Codec_polar_PAC<B, Q>*
 Codec_polar_PAC ::build(const module::CRC<B>* crc) const
 {
-    return new tools::Codec_polar_PAC<B, Q>(*fbg,
-                                            dynamic_cast<const Encoder_polar_PAC&>(*enc),
-                                            dynamic_cast<const Decoder_polar_PAC&>(*dec),
-                                            crc);
+    return new tools::Codec_polar_PAC<B, Q>(
+      *fbg, dynamic_cast<const Encoder_polar_PAC&>(*enc), dynamic_cast<const Decoder_polar_PAC&>(*dec), crc);
 }
 
 // ==================================================================================== explicit template instantiation

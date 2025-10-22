@@ -69,8 +69,7 @@ Decoder_polar_PAC ::get_headers(std::map<std::string, tools::header_list>& heade
     {
         auto p = this->get_prefix();
 
-        if (this->type == "SCL")
-            headers[p].push_back(std::make_pair("Num. of lists (L)", std::to_string(this->L)));
+        if (this->type == "SCL") headers[p].push_back(std::make_pair("Num. of lists (L)", std::to_string(this->L)));
     }
 }
 
