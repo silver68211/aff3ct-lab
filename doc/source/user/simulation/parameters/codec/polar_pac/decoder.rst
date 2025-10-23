@@ -55,7 +55,7 @@ Description of the allowed values:
    :Default: ``8``
    :Examples: ``--dec-lists 128``
 
-|factory::Decoder_polar_pac::p+lists,L|
+|factory::Decoder_polar_PAC::p+lists,L|
 
 References
 """"""""""
