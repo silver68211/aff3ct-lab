@@ -360,6 +360,11 @@
 .. |factory::Decoder_polar_MK::p+node-type| replace::
    Select the type of computations to make in the decoding functions.
 
+.. --------------------------------------- factory Decoder_polar_PAC parameters
+
+.. |factory::Decoder_polar_PAC::p+lists,L| replace::
+   Set the number of lists to maintain in the |SCL| decoder.
+
 .. ---------------------------------------------- factory Decoder_RA parameters
 
 .. |factory::Decoder_RA::p+ite,i| replace::
@@ -527,6 +532,11 @@
 .. |factory::Encoder_polar_MK::p+sys| replace::
    Enable systematic encoding. By default the encoding process is
    non-systematic.
+
+.. --------------------------------------- factory Encoder_polar_PAC parameters
+
+.. |factory::Encoder_polar_PAC::p+conv| replace::
+   Define the convolutionnal code (ex.: "0o33").
 
 .. ---------------------------------------------- factory Encoder_RA parameters
 

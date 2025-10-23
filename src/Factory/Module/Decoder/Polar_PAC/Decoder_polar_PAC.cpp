@@ -46,8 +46,6 @@ Decoder_polar_PAC ::get_description(cli::Argument_map_info& args) const
     args.at({ p + "-implem" })->change_type(cli::Text(cli::Example_set("NAIVE")));
 
     tools::add_arg(args, p, class_name + "p+lists,L", cli::Integer(cli::Positive(), cli::Non_zero()));
-
-    tools::add_arg(args, p, class_name + "p+no-sys", cli::None());
 }
 
 void

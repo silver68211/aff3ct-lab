@@ -55,9 +55,9 @@ Description of the allowed values:
 """"""""""""""""""""""""""""""""""""""""""""""""
 
    :Type: text
-   :Allowed values: ``BCH`` ``LDPC`` ``POLAR`` ``POLAR_MK`` ``RA`` ``REP``
-                    ``RS`` ``RSC`` ``RSC_DB`` ``TURBO`` ``TURBO_DB``
-                    ``TURBO_PROD`` ``UNCODED``
+   :Allowed values: ``BCH`` ``LDPC`` ``POLAR`` ``POLAR_MK`` ``POLAR_PAC``
+                    ``RA`` ``REP`` ``RS`` ``RSC`` ``RSC_DB`` ``TURBO``
+                    ``TURBO_DB`` ``TURBO_PROD`` ``UNCODED``
    :Examples: ``-C BCH``
 
 |factory::Launcher::p+cde-type,C|
@@ -85,6 +85,9 @@ Description of the allowed values:
 | ``POLAR``      | The `Polar`_ codes :cite:`Arikan2009b`.                     |
 +----------------+-------------------------------------------------------------+
 | ``POLAR_MK``   | The Polar mono- or multi-kernel codes :cite:`Benammar2017`. |
++----------------+-------------------------------------------------------------+
+| ``POLAR_PAC``  | The Polarization-Adjusted Convolutional                     |
+|                | codes :cite:`Arikan2019`.                                   |
 +----------------+-------------------------------------------------------------+
 | ``RA``         | The `Repeat Accumulate`_ codes :cite:`Divsalar1998`.        |
 +----------------+-------------------------------------------------------------+

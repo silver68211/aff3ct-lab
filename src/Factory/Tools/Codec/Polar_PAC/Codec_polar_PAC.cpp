@@ -16,6 +16,7 @@ Codec_polar_PAC ::Codec_polar_PAC(const std::string& prefix)
     Codec::set_dec(new Decoder_polar_PAC("dec"));
 
     fbg = new Frozenbits_generator(enc->get_prefix() + "-fb");
+    fbg->type = "RM"; // set RM frozen bit by default in Polar PAC
 }
 
 Codec_polar_PAC*

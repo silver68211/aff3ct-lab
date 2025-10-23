@@ -171,7 +171,7 @@ latex_elements = {
     #
     # 'figure_align': 'htbp',
 
-    'preamble': '\setcounter{tocdepth}{10}'
+    'preamble': '\\setcounter{tocdepth}{10}'
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -342,6 +342,7 @@ rst_epilog = """
 .. |OOK|       replace:: :abbr:`OOK      (On-Off Keying)`
 .. |OS|        replace:: :abbr:`OS       (Operating System)`
 .. |OSs|       replace:: :abbr:`OSs      (Operating Systems)`
+.. |PAC|       replace:: :abbr:`PAC      (Polarization-Adjusted Convolutional)`
 .. |PAM|       replace:: :abbr:`PAM      (Pulse-Amplitude Modulation)`
 .. |PDF|       replace:: :abbr:`PDF      (Probability Density Function)`
 .. |PLVA|      replace:: :abbr:`PLVA     (Parallel List Viterbi Algorithm)`
@@ -470,6 +471,8 @@ bibtex_bibfiles = [root_bib + 'channel/references.bib',
                    root_bib + 'codec/polar/references_pct.bib',
                    root_bib + 'codec/polar_mk/references_dec.bib',
                    root_bib + 'codec/polar_mk/references_enc.bib',
+                   root_bib + 'codec/polar_pac/references_dec.bib',
+                   root_bib + 'codec/polar_pac/references_enc.bib',
                    root_bib + 'codec/rs/references.bib',
                    root_bib + 'codec/rsc/references.bib',
                    root_bib + 'codec/rsc_db/references.bib',
