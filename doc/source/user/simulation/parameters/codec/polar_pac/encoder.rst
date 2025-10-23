@@ -39,7 +39,7 @@ Description of the allowed values:
    parameter.
 
 .. note:: Only **non-systematic encoding** is supported as defined in
-  :cite:`Arikan2019`.
+  :cite:`Arikan2019bis`.
 
 .. _enc-polar_pac-enc-conv:
 
@@ -90,7 +90,8 @@ Description of the allowed values:
 +----------+-------------------------------------------------------------------+
 
 .. note:: When using the ``RM`` method, the codeword size must be inferior
-   to 65536.
+   to 65536. This method is detailed in :cite:`Arikan2019bis` and named RM in
+   :cite:`Yao2020`.
 
 .. note:: By default, when using the |GA| or the |TV| method, the frozen bits
    are optimized for each |SNR| point. To override this behavior you can use
