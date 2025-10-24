@@ -23,7 +23,6 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
   : Codec_SISO<B, Q>(enc_params.K, enc_params.N_cw, enc_params.N_cw)
   , adaptive_fb(fb_params.noise == -1.f)
   , frozen_bits(new std::vector<bool>(fb_params.N_cw, true))
-  , generated_decoder((dec_params.implem.find("_SNR") != std::string::npos))
   , fb_decoder(nullptr)
   , fb_encoder(nullptr)
 {
@@ -45,15 +44,8 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
     }
 
     // ---------------------------------------------------------------------------------------------------------- tools
-    if (!generated_decoder)
-        // build the frozen bits generator
-        fb_generator.reset(fb_params.build());
-    else if (this->N_cw != this->N)
-    {
-        std::stringstream message;
-        message << "'N_cw' has to be equal to 'N' ('N_cw' = " << this->N_cw << ", 'N' = " << this->N << ").";
-        throw spu::tools::invalid_argument(__FILE__, __LINE__, __func__, message.str());
-    }
+    // build the frozen bits generator
+    fb_generator.reset(fb_params.build());
 
     // ---------------------------------------------------------------------------------------------------- allocations
     std::fill(frozen_bits->begin(), frozen_bits->begin() + this->K, false);
@@ -74,22 +66,8 @@ Codec_polar_PAC<B, Q>::Codec_polar_PAC(const factory::Frozenbits_generator& fb_p
     {
         this->set_encoder(static_cast<const factory::Encoder*>(&enc_params)->build<B>());
     }
-    /*std::cout << "Calling the decoder constructor" << __FILE__ << std::endl;*/
 
-    try
-    {
-        /*this->set_decoder_siso(dec_params.build_siso<B, Q>(*frozen_bits, &this->get_encoder()));*/
-        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
-    }
-    catch (const std::exception&)
-    {
-        /*if (generated_decoder)*/
-        /*    this->set_decoder_siho(dec_params.build_gen<B, Q>(crc, &this->get_encoder()));*/
-        /*else*/
-        this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
-    }
-    /*std::cout << "Done constructing the decoder" << __FILE__ << std::endl;*/
-
+    this->set_decoder_siho(dec_params.build<B, Q>(*frozen_bits, crc, &this->get_encoder()));
     try
     {
         this->fb_decoder = dynamic_cast<Interface_get_set_frozen_bits*>(&this->get_decoder_siho());
@@ -150,7 +128,7 @@ void
 Codec_polar_PAC<B, Q>::notify_noise_update()
 {
     Codec<B, Q>::notify_noise_update();
-    if (this->adaptive_fb && !this->generated_decoder)
+    if (this->adaptive_fb)
     {
         this->fb_generator->set_noise(*this->noise);
         this->fb_generator->generate(*this->frozen_bits);
@@ -184,13 +162,6 @@ bool
 Codec_polar_PAC<B, Q>::is_adaptive_frozen_bits() const
 {
     return this->adaptive_fb;
-}
-
-template<typename B, typename Q>
-bool
-Codec_polar_PAC<B, Q>::is_generated_decoder() const
-{
-    return this->generated_decoder;
 }
 
 template<typename B, typename Q>
