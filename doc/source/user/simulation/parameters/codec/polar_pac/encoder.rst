@@ -53,7 +53,8 @@ Description of the allowed values:
 |factory::Encoder_polar_PAC::p+conv|
 
 .. warning:: It is required to specify this argument with the ``POLAR_PAC``
-  encoder. Currently, we only support the octal format for the impulse response of the convolutional transform. For instance, consider an impulse response represented as ``[1, 0, 1, 1, 1, 0, 1]``. When converting this to octal format, we will ignore the first ``1`` and convert the remaining vector, since ``AFF3CT`` will append the ``1`` at the start.
+  encoder. 
+.. note:: Currently, we only support the octal format for the impulse response of the convolutional transform. For instance, consider an impulse response represented as ``[1, 0, 1, 1, 1, 0, 1]``. When converting this to octal format, we will ignore the first ``1`` and convert the remaining vector, since ``AFF3CT`` will append the ``1`` at the start.
 
 Thus, the vector ``[0, 1, 1, 1, 0, 1]`` will be converted to the octal value ``35``. Consequently, the input for ``AFF3CT`` will be ``0o35``.
 
