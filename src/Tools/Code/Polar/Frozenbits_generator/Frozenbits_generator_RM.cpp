@@ -44,7 +44,7 @@ Frozenbits_generator_RM ::evaluate()
         int weight = 0;
         while (temp)
         {
-            weight += (temp) & 1;
+            weight += (temp)&1;
             temp >>= 1;
         }
         channel_weights[i] = weight;
