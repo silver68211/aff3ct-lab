@@ -92,9 +92,9 @@ Description of the allowed values:
 |          | :cite:`3GPP2017`.                                                 |
 +----------+-------------------------------------------------------------------+
 
-.. note:: When using the ``RM`` method, the codeword size must be inferior
-   to 65536. This method is detailed in :cite:`Arikan2019bis` and named RM in
-   :cite:`Yao2020`.
+.. note:: The ``RM`` method is typically good for short block lengths and with
+   PAC codes :cite:`Arikan2019bis`, :cite:`Yao2020`. This is the default
+   generator on |PAC| codes.
 
 .. note:: By default, when using the |GA| or the |TV| method, the frozen bits
    are optimized for each |SNR| point. To override this behavior you can use

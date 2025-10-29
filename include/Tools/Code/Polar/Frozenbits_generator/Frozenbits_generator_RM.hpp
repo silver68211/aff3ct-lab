@@ -14,9 +14,6 @@ namespace tools
 {
 class Frozenbits_generator_RM : public Frozenbits_generator
 {
-  private:
-    const int m;
-
   public:
     Frozenbits_generator_RM(const int K,
                             const int N,

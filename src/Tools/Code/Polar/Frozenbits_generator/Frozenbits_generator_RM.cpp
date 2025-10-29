@@ -18,7 +18,6 @@ Frozenbits_generator_RM ::Frozenbits_generator_RM(const int K,
                                                   const std::string& dump_channels_path,
                                                   const bool dump_channels_single_thread)
   : Frozenbits_generator(K, N, dump_channels_path, dump_channels_single_thread)
-  , m((int)std::log2(N))
 {
 }
 
@@ -34,7 +33,6 @@ Frozenbits_generator_RM ::clone() const
 void
 Frozenbits_generator_RM ::evaluate()
 {
-
     std::vector<uint32_t> best_channels_mother(this->N);
     std::iota(best_channels_mother.begin(), best_channels_mother.end(), 0);
     std::vector<uint32_t> channel_weights(this->N);
@@ -53,11 +51,6 @@ Frozenbits_generator_RM ::evaluate()
     std::sort(best_channels_mother.begin(),
               best_channels_mother.end(),
               [&channel_weights](int x, int y) { return channel_weights[x] > channel_weights[y]; });
-
-    // std::cout << "RM frozenbit_generator \n";
-    // for (const auto& v : best_channels_mother)
-    //     std::cout << v << ",";
-    // std::cout << std::endl;
 
     std::copy(best_channels_mother.begin(), best_channels_mother.end(), best_channels.begin());
 }
