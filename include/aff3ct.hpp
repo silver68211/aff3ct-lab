@@ -435,6 +435,9 @@
 #ifndef DECODER_POLAR_SCF_NAIVE_
 #include <Module/Decoder/Polar/SCF/Decoder_polar_SCF_naive.hpp>
 #endif
+#ifndef DECODER_POLAR_DSCF_NAIVE_
+#include <Module/Decoder/Polar/DSCF/Decoder_polar_DSCF_naive.hpp>
+#endif
 #ifndef DECODER_POLAR_SCF_NAIVE_SYS_
 #include <Module/Decoder/Polar/SCF/Decoder_polar_SCF_naive_sys.hpp>
 #endif

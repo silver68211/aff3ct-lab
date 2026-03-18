@@ -9,7 +9,7 @@ Polar Decoder parameters
 """"""""""""""""""
 
    :Type: text
-   :Allowed values: ``SC`` ``SCAN`` ``SCF`` ``SCL`` ``SCL_MEM`` ``ASCL``
+   :Allowed values: ``SC`` ``SCAN`` ``SCF`` ``DSCF`` ``SCL`` ``SCL_MEM`` ``ASCL``
                     ``ASCL_MEM`` ``CHASE`` ``ML``
    :Default: ``SC``
    :Examples: ``--dec-type ASCL``
@@ -26,6 +26,8 @@ Description of the allowed values:
 | ``SCAN``     | Select the |SCAN| algorithm from :cite:`Fayyaz2014`.          |
 +--------------+---------------------------------------------------------------+
 | ``SCF``      | Select the |SCF| algorithm from :cite:`Afisiadis2014`.        |
++--------------+---------------------------------------------------------------+
+| ``DSCF``     | Select the |DSCF| algorithm from :cite:`Afisiadis2014`.        |
 +--------------+---------------------------------------------------------------+
 | ``SCL``      | Select the |SCL| algorithm from :cite:`Tal2011`, also support |
 |              | the improved |CA|-|SCL| algorithm.                            |
@@ -148,6 +150,8 @@ Description of the allowed values:
 Corresponds to the ``T`` parameter of the |SCF| decoding alogorithm
 :cite:`Afisiadis2014`.
 
+Corresponds to the ``T`` parameter of the |DSCF| decoding alogorithm
+:cite:`Afisiadis2014`.
 .. _dec-polar-dec-lists:
 
 ``--dec-lists, -L``

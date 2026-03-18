@@ -363,6 +363,7 @@ rst_epilog = """
 .. |SC|        replace:: :abbr:`SC       (Successive Cancellation)`
 .. |SCAN|      replace:: :abbr:`SCAN     (Soft CANcellation)`
 .. |SCF|       replace:: :abbr:`SCF      (Successive Cancellation Flip)`
+.. |DSCF|      replace:: :abbr:`DSCF     (Dynamic Successive Cancellation Flip)`
 .. |SCL|       replace:: :abbr:`SCL      (Successive Cancellation List)`
 .. |SCMA|      replace:: :abbr:`SCMA     (Sparse Code Multiple Access)`
 .. |SCo|       replace:: :abbr:`SC       (Self-Corrected)`
