@@ -9,7 +9,7 @@ if(${CMAKE_VERSION} VERSION_EQUAL "3.14" OR ${CMAKE_VERSION} VERSION_GREATER "3.
     cmake_policy(SET CMP0083 NEW)
 endif()
 
-project(aff3ct CXX)
+project(aff3ct_lab CXX)
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------- CMAKE OPTIONS
@@ -221,7 +221,7 @@ if(AFF3CT_COMPILE_EXE)
         add_executable(aff3ct-bin $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
     endif()
     set_target_properties(aff3ct-bin PROPERTIES
-                                     OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
+                                     OUTPUT_NAME aff3ct-lab-${AFF3CT_VERSION_FULL}
                                      POSITION_INDEPENDENT_CODE ON) # set -fpie
     message(STATUS "AFF3CT - Compile: executable")
 endif(AFF3CT_COMPILE_EXE)
@@ -234,7 +234,7 @@ if(AFF3CT_COMPILE_SHARED_LIB)
         add_library(aff3ct-shared-lib SHARED $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
     endif()
     set_target_properties(aff3ct-shared-lib PROPERTIES
-                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
+                                            OUTPUT_NAME aff3ct-lab-${AFF3CT_VERSION_FULL}
                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
     message(STATUS "AFF3CT - Compile: shared library")
 endif(AFF3CT_COMPILE_SHARED_LIB)
@@ -245,7 +245,7 @@ if(AFF3CT_COMPILE_STATIC_LIB)
         add_library(aff3ct-static-lib STATIC $<TARGET_OBJECTS:aff3ct-obj> $<TARGET_OBJECTS:cli-obj>)
     endif()
     set_target_properties(aff3ct-static-lib PROPERTIES
-                                            OUTPUT_NAME aff3ct-${AFF3CT_VERSION_FULL}
+                                            OUTPUT_NAME aff3ct-lab-${AFF3CT_VERSION_FULL}
                                             POSITION_INDEPENDENT_CODE ON) # set -fpic
     message(STATUS "AFF3CT - Compile: static library")
 endif(AFF3CT_COMPILE_STATIC_LIB)
